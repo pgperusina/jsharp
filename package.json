@@ -1,0 +1,14 @@
+{
+  "name": "jsharp",
+  "version": "1.0.0",
+  "description": "OLC2 Project 2 - J#",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pablo G. Perusina",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
