@@ -1,21 +1,101 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <script src="/js/jquery.js"></script>
-    <script src="/js/bootstrap.js"></script>
-  </head>
-  <body>
-    <!-- Image and text -->
-<nav class="navbar navbar-light bg-light">
-  <a class="navbar-brand" href="#">
-    <i class="fa fa-fw fa-search" >abcd</i>
-    Bootstrap
-  </a>
-</nav>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/font-awesome.css">
+  <link rel="stylesheet" href="/stylesheets/jquery.numberedtextarea.css">
+
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap.js"></script>
+  <script type="text/javascript" src="js/jquery.numberedtextarea.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body>
+  <div class="container-fluid">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark py-auto">
+    <a class="navbar-brand mr-auto" href="#">Compi Studio</a>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto ">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Archivo
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <input type="file" id="Abrir" /> <label for="Abrir"> Seleccione un archivo</label>
+            <a class="dropdown-item" href="/abrir">Abrir el archivo</a>
+            <a class="dropdown-item" href="/guardar">Guardar</a>
+            <a class="dropdown-item" href="/guardarComo">Guardar Como</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Reportes
+          </a>
+          <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/errores">Errores</a>
+            <a class="dropdown-item" href="/ts">Tabla de símbolos</a>
+            <a class="dropdown-item" href="/ast">AST</a>
+            <a class="dropdown-item" href="/optimizacion">Optimización</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Compilar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Optimizar</a>
+        </li>
+      </ul>
+    </div>
+
+  </nav>
+
+
+  <div class="container-fluid my-4">
+    <div class="row">
+      <div class="col-sm-6">
+        <textarea class="lined" cols="60" rows="10"></textarea>
+      </div>
+      <div class="col-sm-6">
+        <div class="col-sm-3">col-sm-3</div>
+        <div class="col-sm-3">col-sm-3</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">col-sm</div>
+      <div class="col-sm">col-sm</div>
+      <div class="col-sm">col-sm</div>
+    </div>
+  </div>
+  <div class="container-fluid my-4">
+  <h1><%= title %></h1>
+  <p>Welcome to <%= title %></p>
+  </div>
+  </div>
+</body>
+
+<script>$('document').ready(function(){
+    $('textarea').numberedtextarea({
+
+      // font color for line numbers
+      color: null,
+
+      // border color
+      borderColor: null,
+
+      // CSS class to be added to the line numbers
+      class: "numbers",
+
+      // if true Tab key creates indentation
+      allowTabChar: false,
+
+    });
+
+  })</script>
 </html>
+

@@ -1,8 +1,17 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: black;
 }
 
 a {
   color: #00B7FF;
+}
+
+.numbers {
+  color: black !important;
+}
+
+.navbar-nav > {
+  margin-left:30px;
+  margin-right:30px;
 }
