@@ -4,14 +4,22 @@
   "private": true,
   "scripts": {
     "debug": "./scripts/debug",
-    "start": "node ./bin/www"
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "font-awesome": "^4.7.0",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "jquery": "^3.5.0",
+    "morgan": "~1.9.1",
+    "popper.js": "^1.16.1"
+  },
+  "devDependencies": {
+    "jison": "^0.4.18",
+    "nodemon": "^2.0.3"
   }
 }
