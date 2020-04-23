@@ -8,15 +8,10 @@
   <link rel="stylesheet" href="/css/font-awesome.css">
   <link rel="stylesheet" href="/stylesheets/jquery.numberedtextarea.css">
 
-  <script src="/js/jquery.js"></script>
-  <script src="/js/bootstrap.js"></script>
-  <script type="text/javascript" src="js/jquery.numberedtextarea.js"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 
 <body>
-  <div class="container-fluid">
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark py-auto">
     <a class="navbar-brand mr-auto" href="#">Compi Studio</a>
 
@@ -27,7 +22,7 @@
             Archivo
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <input type="file" id="Abrir" /> <label for="Abrir"> Seleccione un archivo</label>
+            <input type="file" id="Abrir" nwsaveas  /> <label for="Abrir"> Seleccione un archivo</label>
             <a class="dropdown-item" href="/abrir">Abrir el archivo</a>
             <a class="dropdown-item" href="/guardar">Guardar</a>
             <a class="dropdown-item" href="/guardarComo">Guardar Como</a>
@@ -55,47 +50,130 @@
 
   </nav>
 
+  <div class="w-100 p-1 mt-3 border-bottom border-secondary">
+    <div class="container-fluid">
+      <ul id="myTab" class="nav nav-pills green">
+        <li class="nav-item">
+          <a href="#c3d" class="nav-link active">Traducción a C3D</a>
+        </li>
+        <li class="nav-item">
+          <a href="#optimizacion" class="nav-link">Optimización de C3D</a>
+        </li>
+        <li class="nav-item">
+          <a href="#reporteOptimizacion" class="nav-link">Reporte Optimización</a>
+        </li>
+        <li class="nav-item">
+          <a href="#errores" class="nav-link">Errores</a>
+        </li>
+        <li class="nav-item">
+          <a href="#ts" class="nav-link">Tabla de Símbolos</a>
+        </li>
+        <li class="nav-item">
+          <a href="#ast" class="nav-link">AST</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 
-  <div class="container-fluid my-4">
-    <div class="row">
-      <div class="col-sm-6">
-        <textarea class="lined" cols="60" rows="10"></textarea>
+  <div class=" tab-content">
+
+      <div class="tab-pane fade show active" id="c3d">
+        <h4 class="mt-2 text-center">Traducción a C3D</h4>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="text-center">
+                <button type="button"
+                        id="btn-compilar"
+                        disabled
+                        class="btn btn-success btn-sm disabled">Compilar</button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <h6 class="text-center">Alto Nivel</h6>
+                <textarea class="form-control altonivel lined"
+                          name="taaltonivel"
+                          id="taaltonivel"
+                          rows="20"></textarea>
+            </div>
+            <div class="col-6">
+              <h6 class="text-center">Código 3 Direcciones</h6>
+                <textarea class="form-control c3d lined"
+                          name="tac3d"
+                          id="tac3d"
+                          rows="20"></textarea>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-sm-6">
-        <div class="col-sm-3">col-sm-3</div>
-        <div class="col-sm-3">col-sm-3</div>
+
+      <div class="tab-pane fade" id="optimizacion">
+        <h4 class="mt-2 text-center">Optimización de C3D</h4>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="text-center">
+                <button type="button"
+                        id="btn-optimizar"
+                        disabled
+                        class="btn btn-success btn-sm disabled">Optimizar</button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <h6 class="text-center">C3D</h6>
+              <textarea class="form-control c3d lined"
+                        name="tac3d_no_optimizado"
+                        id="tac3d_no_optimizado"
+                        rows="20"></textarea>
+            </div>
+            <div class="col-6">
+              <h6 class="text-center">C3D Optimizado</h6>
+              <textarea class="form-control c3d lined"
+                        name="tac3d_optimizado"
+                        id="tac3d_optimizado"
+                        rows="20"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="reporteOptimizacion">
+        <h4 class="mt-2 text-center">Reporte Optimización</h4>
+      </div>
+
+      <div class="tab-pane fade" id="errores">
+        <h4 class="mt-2 text-center">Errores</h4>
+      </div>
+
+      <div class="tab-pane fade" id="ts">
+        <h4 class="mt-2 text-center">Tabla de Símbolos</h4>
+      </div>
+
+    <div class="tab-pane fade" id="ast">
+      <h4 class="mt-2 text-center">AST</h4>
+    </div>
+
+
+  </div>
+
+  <div class="container-fluid mt-1">
+    <div class="row">
+      <div class="col-12">
+        <h6 class="text-center">Consola</h6>
+        <textarea class="form-control consola" name="taconsola" id="taconsola" rows="25"></textarea>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm">col-sm</div>
-      <div class="col-sm">col-sm</div>
-      <div class="col-sm">col-sm</div>
-    </div>
   </div>
-  <div class="container-fluid my-4">
-  <h1><%= title %></h1>
-  <p>Welcome to <%= title %></p>
-  </div>
-  </div>
+
 </body>
 
-<script>$('document').ready(function(){
-    $('textarea').numberedtextarea({
-
-      // font color for line numbers
-      color: null,
-
-      // border color
-      borderColor: null,
-
-      // CSS class to be added to the line numbers
-      class: "numbers",
-
-      // if true Tab key creates indentation
-      allowTabChar: false,
-
-    });
-
-  })</script>
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/jquery.numberedtextarea.js"></script>
+<script src="../js/main.js" ></script>
 </html>
 
