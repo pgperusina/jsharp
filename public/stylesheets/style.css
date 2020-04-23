@@ -1,17 +1,37 @@
 body {
   padding: 50px;
-  background-color: black;
+  /*background-color: black*/
+  !important;
 }
 
-a {
-  color: #00B7FF;
+
+.numberedtextarea-line-numbers {
+  background-color: #35a852;
+  color: white !important;
+  padding-left: 0px !important;
 }
 
-.numbers {
-  color: black !important;
+textarea {
+  font-size: x-small !important;
+  background-color: black !important;
+
+}
+.altonivel {
+  color:whitesmoke !important;
 }
 
-.navbar-nav > {
-  margin-left:30px;
-  margin-right:30px;
+.c3d {
+  color: #0caca5 !important;
+}
+
+.consola {
+  color:greenyellow !important;
+}
+
+.nav-pills > li > a.active {
+  background-color: #35a852 !important;
+}
+
+.nav-pills > li > a  {
+  color: #0c0a00 !important;
 }
