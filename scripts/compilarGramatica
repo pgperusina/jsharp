@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "-_-_-_-_Compilando gramática-_-_-_-_-_"
+jison "grammar/jsharp.jison"
+wait $1
+if [ $? != 0 ];
+then
+  echo "Error compilando gramática..."
+  exit 1
+fi
+if [ ! -f jsharp.js ];
+then
+  echo "Archivo compilado no se encontró..."
+  exit 1
+fi
+mv jsharp.js grammar/jsharp.js
+echo "-_-_-_-_Gramática compilada-_-_-_-_"

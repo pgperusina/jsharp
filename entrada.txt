@@ -1,0 +1,44 @@
+import hola.j , funciones-recursivas.v2.j;
+
+Integer Var1 = 5;
+abc[] Var1 = 5;
+Global Var2 := 10.24;
+const Var3 := true && true || false;
+String String = "juan-á";
+CHAR a = 'a';
+boolean v2,v3,v4 = true;
+global var_numeric := 1+1*2;
+double base,altura;
+
+// Asignaciones
+String = "abc";
+var1.uno.valor2 = 4*4;
+BooLean bb = 2 != (3++);
+BooLean ab = 2 == (3--);
+BooLean cc = 4 <= 6;
+bool z = !false && true;
+GLobal ze := "abc" === "abC";
+
+if ( (1*3)^^2 > 55 && false) {
+    const dos := 44;
+}
+
+if ( (1*3)^^2 > 4 && false) {
+    CHAR b = 'b';
+} else {
+    const tres := 44;
+}
+
+if ((1*3)^^2 > 4 && false) {
+    const cuatro := 44;
+} else if (-2==-(1+1)) { 
+    Global cinco := 453.24;
+}
+
+
+/*evaluar[1+1];
+Evaluar[1+1*2];
+Evaluar[-(1+1*6/3-5+7)];
+Evaluar[-(1+1*6/3-5+1*-2)];
+Evaluar[-(1.6+1.45)];
+*/
