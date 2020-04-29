@@ -47,6 +47,23 @@ Switch ((1+1)^^2) {
 }
 
 
+while (b > 5) {
+    var k := true;
+}
+
+do {
+    var dowhile := 2*5;
+    x = x + y;
+} while (j == 2)
+
+for(integer t=0; t<10; t = t +2) {
+    const forTT := "ForTT";
+}
+
+for(; t<10; t++) {
+    const forTT := "ForTT";
+}
+
 /*evaluar[1+1];
 Evaluar[1+1*2];
 Evaluar[-(1+1*6/3-5+7)];

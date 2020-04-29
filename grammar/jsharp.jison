@@ -153,11 +153,19 @@ instruccion
 	| switch {
 		$$ = $1;
 	}
-
-	/*| error PCOMA { 
-			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.last_column); 
+	| while {
+		$$ = $1;
+	}
+	| doWhile {
+		$$ = $1;
+	}
+	| for {
+		$$ = $1;
+	}
+	| error PCOMA {
+			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 			//$$ = "ERROR"
-		}*/
+		}
 ;
 
 
@@ -209,6 +217,9 @@ declaracion
 		console.log("declaracion 5 --" + $1 + " " +  $2);
 		// todo - crear nodo declaracion
 	}
+	/*| error expresion {
+		console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+	}*/
 ;
 
 type
@@ -275,10 +286,14 @@ if
 			console.log("IF ELSE -- " + $1 + " " + $3 + " ELSE ");
 			// todo -- crear nodo de if
 		}
-	| error PCOMA { 
-			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.last_column); 
-			//$$ = "ERROR"
-		}
+;
+
+bloqueInstrucciones
+	: LLAVIZQ instrucciones LLAVDER {
+		// todo -- crear lista de instrucciones
+		$$ = $2;
+		console.log("BLOQUE INSTRUCCIONES -- " + $2);
+	}
 ;
 
 switch
@@ -309,12 +324,43 @@ case
 	}
 ;
 
-bloqueInstrucciones
-	: LLAVIZQ instrucciones LLAVDER {
-		// todo -- crear lista de instrucciones
-		console.log("BLOQUE INSTRUCCIONES -- " + $2);
+while
+	: WHILE PARIZQ expresion PARDER bloqueInstrucciones {
+		console.log($1 + " " + $2 + " " + $3 + " " + $4 + " " + $5);
+		// todo - crear nodo while
 	}
 ;
+
+doWhile
+	: DO bloqueInstrucciones WHILE PARIZQ expresion PARDER {
+		console.log($1 + " " + $2 + " " + $3 + " " + $5);
+		// todo - crear nodo dowhile
+	}
+;
+
+for
+	: FOR PARIZQ inicio PCOMA condicion PCOMA final PARDER bloqueInstrucciones {
+		console.log($1 + " " + $3 + ";" + $5 + "; " + $7 + " " + $9);
+		// todo - crear nodo for
+	}
+;
+
+inicio
+	: declaracion
+	| { console.log(yytoken);}
+;
+
+condicion
+	: expresion 
+	| { console.log(yytoken);}
+;
+
+final
+	: declaracion
+	| expresion
+	| { console.log(yytoken);}
+;
+
 
 expresion
 	: expresion OPINCREMENTO    	{ $$ = $1 + 1; }
