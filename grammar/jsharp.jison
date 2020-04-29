@@ -56,7 +56,6 @@
 "catch"				return 'CATCH';
 "throw"				return 'THROW';
 
-"Evaluar"           return 'REVALUAR';
 ","                 return 'COMA';
 "."                 return 'PUNTO';
 ";"                 return 'PCOMA';
@@ -67,6 +66,7 @@
 "{"                 return 'LLAVIZQ';
 "}"                 return 'LLAVDER';
 ":="                return 'DPIGUAL';
+":"                 return 'DOSPUNTOS';
 "++"                return 'OPINCREMENTO';
 "+"                 return 'MAS';
 "--"                return 'OPDECREMENTO';
@@ -129,8 +129,13 @@ initial
 ;
 
 instrucciones
-	: instrucciones instruccion
-	| instruccion
+	: instrucciones instruccion {
+		$$ = $1;
+		$$.push($2);
+	}
+	| instruccion {
+		$$ = [$1];
+	}
 ;
 
 instruccion
@@ -145,10 +150,10 @@ instruccion
 	| if {
 		$$ = $1;
 	}
-	| REVALUAR CORIZQ expresion CORDER PCOMA
- 	{
-		console.log('El valor de la expresión es: ' + $3);
+	| switch {
+		$$ = $1;
 	}
+
 	/*| error PCOMA { 
 			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.last_column); 
 			//$$ = "ERROR"
@@ -175,26 +180,32 @@ import
 
 declaracion
 	: type lista_id IGUAL expresion {
+		$$ = $1 + " " + $2 + " = " + $4;
 		console.log("declaracion 1 --" + $1 + " " + $2 + " = " + $4);
 		// todo - crear nodo declaracion
 	}
 	| ids_anidados IGUAL expresion {
+		$$ = $1 + $2 + $3;
 		console.log("ASIGNACION -- " + $1 + $2 + $3);
 		// todo - crear nodo ASIGNACION
 	}
 	| VAR IDENTIFICADOR DPIGUAL expresion {
+		$$ = $1 + " " + $2 + " := " + $4;
 		console.log("declaracion 2 --" + $1 + " " + $2 + " := " + $4);
 		// todo - crear nodo declaracion
 	}
 	| CONST IDENTIFICADOR DPIGUAL expresion {
+		$$ = $1 + " " + $2 + " := " + $4;
 		console.log("declaracion 3 --" + $1 + " " + $2 + " := " + $4);
 		// todo - crear nodo declaracion
 	}
 	| GLOBAL IDENTIFICADOR DPIGUAL expresion {
+		$$ = $1 + " " + $2 + " := " + $4;
 		console.log("declaracion 4 --" + $1 + " " + $2 + " := " + $4);
 		// todo - crear nodo declaracion
 	}
 	| type lista_id {
+		$$ = $1 + " " +  $2;
 		console.log("declaracion 5 --" + $1 + " " +  $2);
 		// todo - crear nodo declaracion
 	}
@@ -268,6 +279,34 @@ if
 			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.last_column); 
 			//$$ = "ERROR"
 		}
+;
+
+switch
+	: SWITCH PARIZQ expresion PARDER LLAVIZQ cases LLAVDER {
+		console.log($1 + " " + $3 + " " + $6);
+		// todo - crear nodo switch
+	}
+;
+
+cases
+	: cases case {
+		$$ = $1;
+		$$.push($2);
+	}
+	| case {
+		$$ = [$1];
+	}
+; 
+
+case
+	: CASE expresion DOSPUNTOS instrucciones {
+		$$ = $1 + " " + $2 + " " + $3 + " " + $4;
+		// todo - crear nodo case
+	}
+	| DEFAULT DOSPUNTOS instrucciones {
+		$$ = $1 + " " + $2 + " " + $3;
+		// todo - crear nodo case default
+	}
 ;
 
 bloqueInstrucciones
