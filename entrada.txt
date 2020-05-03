@@ -13,6 +13,7 @@ double base,altura;
 // Asignaciones
 String = "abc";
 var1.uno.valor2 = 4*4;
+
 BooLean bb = 2 != (3++);
 BooLean ab = 2 == (3--);
 BooLean cc = 4 <= 6;
@@ -31,6 +32,7 @@ if ( (1*3)^^2 > 4 && false) {
 
 if ((1*3)^^2 > 4 && false) {
     const cuatro := 44;
+    break;
 } else if (-2==-(1+1)) { 
     Global cinco := 453.24;
 }
@@ -38,6 +40,7 @@ if ((1*3)^^2 > 4 && false) {
 Switch ((1+1)^^2) {
     case 4: 
         const x := "abc";
+        breaK;
     case 'C':
         var y := "y";
     case "cuatro":
@@ -49,20 +52,42 @@ Switch ((1+1)^^2) {
 
 while (b > 5) {
     var k := true;
+    continue;
 }
 
 do {
     var dowhile := 2*5;
     x = x + y;
+    return x;
 } while (j == 2)
 
-for(integer t=0; t<10; t = t +2) {
+for(integer t=0; t<10; t++) {
     const forTT := "ForTT";
 }
 
 for(; t<10; t++) {
-    const forTT := "ForTT";
+    const forTT2 := "ForTT2";
 }
+
+for(;;) {
+    const emptyFor := "emptyFor";
+}
+
+for(;a<3;) {
+    const conditionFor := "conditionFor";
+}
+
+char factorial(integer a) {
+    boolean varFactorial = "juan-á";
+    integer varFactGlobal = 'x';
+    fac = 31;
+     x = factorial(2,3);
+ 
+}
+
+x = factorial(4,5);
+factorial();
+factorial(a=2.5, b='x', d="uno");
 
 /*evaluar[1+1];
 Evaluar[1+1*2];

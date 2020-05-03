@@ -108,7 +108,9 @@
 							
 /lex
 
-/* Precedence and association */
+/* Precedence and association - lower to higher*/
+%left CAST
+%right IGUAL
 %right OPINCREMENTO OPDECREMENTO
 %left AND
 %left OR
@@ -147,6 +149,9 @@ instruccion
 		$$ = $1;
 		//console.log("declaracion");
 	}
+	/* | asignacion PCOMA {
+		$$ = $1;
+	} */
 	| if {
 		$$ = $1;
 	}
@@ -162,12 +167,29 @@ instruccion
 	| for {
 		$$ = $1;
 	}
+	| break PCOMA {
+		$$ = $1;
+	}
+	| continue PCOMA {
+		$$ = $1;
+	}
+	| return PCOMA {
+		$$ = $1;
+	}
+	| funcion {
+		$$ = $1;
+	}
+	| llamada PCOMA {
+		$$ = $1;
+		console.log("LLAMADA -- " + $$);
+	}
 	| error PCOMA {
 			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 			//$$ = "ERROR"
-		}
+	}
 ;
 
+// IMPORTS
 
 imports
 	: IMPORT import  {
@@ -185,6 +207,8 @@ import
 			$$ = [$1];
 		}
 ;
+
+// DECLARACIONES Y ASIGNACIONES
 
 declaracion
 	: type lista_id IGUAL expresion {
@@ -246,19 +270,40 @@ tipo
 	| BOOLEAN {
 		$$ = $1;
 	}
+	| VOID {
+		$$ = $1;
+	}
 	| ids_anidados {
 		$$ = $1;
 	}
 ;
 
-ids_anidados
-	: ids_anidados PUNTO IDENTIFICADOR {
-		console.log("IDS_ANIDADOS -- " +$1 + $2 + $3);
-		$$ =$1;
+/* asignacion
+	: ids_anidados IGUAL expresion {
+		$$ = $1 + $2 + $3;
+		console.log("ASIGNACION -- " + $1 + $2 + $3);
+		// todo - crear nodo ASIGNACION
+	}
+; */
+
+/* ids_anidados
+	: ids_anidados PUNTO expresion {
+		$$=$1;
 		$$.push($3);
+		console.log("IDS_ANIDADOS -- " +$$);
+	}
+	| expresion {
+		console.log("IDENTIFICADOR IDS_ANIDADOS -- " +$1);
+		$$ = [$1];
+	}
+; */
+ids_anidados
+	: ids_anidados PUNTO IDENTIFICADOR  {
+		$$=$1;
+		$$.push($3);
+		console.log("IDS ANIDADOS!! -- " +$$);
 	}
 	| IDENTIFICADOR {
-		console.log("IDENTIFICADOR IDS_ANIDADOS -- " +$1);
 		$$ = [$1];
 	}
 ;
@@ -272,6 +317,8 @@ lista_id
 		$$ = [$1];
 	}
 ;
+
+//CONTROL DE FLUJO
 
 if
 	: IF PARIZQ expresion PARDER bloqueInstrucciones { 
@@ -339,28 +386,121 @@ doWhile
 ;
 
 for
-	: FOR PARIZQ inicio PCOMA condicion PCOMA final PARDER bloqueInstrucciones {
-		console.log($1 + " " + $3 + ";" + $5 + "; " + $7 + " " + $9);
+	: FOR PARIZQ inicio  condicion  final PARDER bloqueInstrucciones {
+		console.log($1 + " " + $3 + ";" + $4 + $5 + " " + $7);
 		// todo - crear nodo for
 	}
 ;
 
 inicio
-	: declaracion
-	| { console.log(yytoken);}
+	: declaracion PCOMA { $$ = $1;}
+	| PCOMA { console.log("PCOMA INICIO FOR ---- " +yytext);}
 ;
 
 condicion
-	: expresion 
-	| { console.log(yytoken);}
+	: expresion PCOMA { $$ = $1;}
+	| PCOMA { console.log("PCOMA CONDICION FOR ---- " +yytext);}
 ;
 
 final
-	: declaracion
-	| expresion
-	| { console.log(yytoken);}
+	: expresion { $$ = $1;}
+	| { console.log("EMPTY FINAL FOR ---- " +yytext);}
 ;
 
+break
+	: BREAK {
+		$$ = $1;
+		// todo - crear nodo break
+	}
+;
+
+continue
+	: CONTINUE {
+		$$ = $1;
+		// todo - crear nodo continue
+	}
+;
+
+return
+	: RETURN expresion {
+		$$ = $1 + " " + $2;
+		// todo - crear nodo return
+	}
+;
+
+//CASTEO
+
+cast
+	: PARIZQ tipo PARDER expresion {
+		/* $$ = "(" + $2 + ")" + " " + $4; */
+		$$ = $1 + $3;
+		// todo - crear nodo CAST
+	}
+;
+
+//FUNCIONES
+
+funcion
+	: type IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
+		$$ = $1 + " " + $2 + "(" + $listaParametros + ")" + $bloqueInstrucciones;
+		console.log($$);
+		// todo - crear nodo FUNCION
+	}
+;
+
+listaParametros
+	: listaParametros COMA parametro {
+		$$ = $1;
+		$$.push($3);
+	}
+	| parametro {
+		$$ = [$1];
+	}
+;
+
+parametro
+	: type IDENTIFICADOR {
+		$$ = $1 + " " + $2;
+	}
+;
+
+llamada
+	: IDENTIFICADOR PARIZQ listaArgumentos PARDER {
+		$$ = $1 + "(" + $3 + ")";
+		console.log($$);
+		// todo - crear nodo llamada
+	}
+;
+
+listaArgumentos
+	: listaArgumentos COMA argumento {
+		$$ = $1;
+		$$.push($3);
+		console.log("ARGUMENTOS - " + $$);
+	}
+	| argumento {
+		$$ = [$1];
+		console.log("ARGUMENTO -- " + $$);
+	}
+	| {
+		console.log("EMPTY ARGUMENTOS -- " + $1);
+	}
+;
+
+argumento
+	: IDENTIFICADOR IGUAL expresion {
+		$$ = $1 + "=" + $3;
+		console.log($$);
+	}
+	| expresion {
+		$$ = $1;
+		console.log($$);
+	}
+	| "$" IDENTIFICADOR {
+		$$ = $1 + $2;
+		console.log($$);
+	}
+;
 
 expresion
 	: expresion OPINCREMENTO    	{ $$ = $1 + 1; }
@@ -381,8 +521,14 @@ expresion
 	| expresion IGUALA expresion	{ $$ = $1 == $3; }
 	| expresion TRIPLEIGUAL expresion	{ $$ = $1 === $3; }
 	| expresion DIFERENTEDE expresion	{ $$ = $1 != $3; }
-	| MENOS expresion %prec UMENOS  { $$ = $2 *-1; }
-	| NOT expresion					 { $$ = !$2; }
+	| MENOS expresion %prec UMENOS   { $$ = $2 *-1; }
+	| NOT expresion 				 { $$ = !$2; }
+	| llamada {
+		$$ = $1;
+	}
+	/* | cast {
+		$$ = $1;
+	} */
 	| ENTERO                        { $$ = Number($1); }
 	| DECIMAL                       { $$ = Number($1); }
 	| TRUE                      	{ $$ = Boolean($1); }

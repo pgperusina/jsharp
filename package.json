@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "debug": "./scripts/debug",
+    "debug": "bash scripts/debug",
     "start": "nodemon ./bin/www",
-    "compileGrammar": "./scripts/compilarGramatica"
+    "compileGrammar": "bash scripts/compilarGramatica"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
