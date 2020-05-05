@@ -225,6 +225,11 @@ declaracion
 		console.log("declaracion 1 --" + $1 + " " + $2 + " = " + $4);
 		// todo - crear nodo declaracion
 	}
+	| type lista_id IGUAL STRC type {
+		$$ = $1 + " " + $2 + " = " + $4 + $5;
+		console.log("DECLARACION ARREGLOS --" + $$);
+		// todo - crear nodo declaracion
+	}
 	| ids_anidados IGUAL expresion {
 		$$ = $1 + $2 + $3;
 		console.log("ASIGNACION -- " + $1 + $2 + $3);
@@ -260,6 +265,10 @@ type
 		$$ = $1 + $2 + $3;
 		// todo - crear nodo tipo diferenciando array de variable
 	}
+	| tipo CORIZQ expresion CORDER {
+		$$ = $1 + $2 + $3;
+		// todo - crear nodo tipo diferenciando array de variable
+	}
 	| tipo {
 		$$ = $1;
 		// todo - crear nodo tipo diferenciando array de variable
@@ -289,12 +298,23 @@ tipo
 
 ids_anidados
 	: ids_anidados PUNTO IDENTIFICADOR  {
-		$$=$1;
+		$$=[];
+		$$.push($1);
 		$$.push($3);
 		console.log("IDS ANIDADOS!! -- " +$$);
 	}
+	| ids_anidados PUNTO llamada
+	 {
+		$$=[];
+		$$.push($1);
+		$$.push($3);
+		console.log("IDS ANIDADOS!! -- " +$$);
+	}
+	| llamada {
+		$$ = $1;
+	}
 	| IDENTIFICADOR {
-		$$ = [$1];
+		$$ = $1;
 	}
 	/* | IDENTIFICADOR PARIZQ PARDER {
 		// espero una llamada o identificador - llamada() o ID
@@ -459,15 +479,15 @@ parametro
 ;
 
 llamada
-	: llamada PUNTO ids_anidados PARIZQ listaArgumentos PARDER {
+	: IDENTIFICADOR PARIZQ listaArgumentos PARDER {
 		$$ = $1 + "(" + $3 + ")";
-		console.log("LLAMADA ANIDADOS UNO -- " +$$);
+		console.log("LLAMADA  -- " +$$);
 		// todo - crear nodo llamada
 	}
-	| ids_anidados PARIZQ listaArgumentos PARDER {
+	/* | ids_anidados PARIZQ listaArgumentos PARDER {
 		$$ = $1 + $2 + $3 + $4;
 		console.log("LLAMADA ANIDADOS -- " +$$);
-	}
+	} */
 
 ;
 
@@ -545,9 +565,9 @@ expresion
 	| expresion DIFERENTEDE expresion	{ $$ = $1 != $3; }
 	| MENOS expresion %prec UMENOS   { $$ = $2 *-1; }
 	| NOT expresion 				 { $$ = !$2; }
-	| llamada {
+	/* | llamada {
 		$$ = $1;
-	}
+	} */
 	/* | cast {
 		$$ = $1;
 	} */
@@ -562,6 +582,7 @@ expresion
 	|CARACTER {
 		$$ = $1;
 	}
+	| LLAVIZQ listaArgumentos LLAVDER { $$ = $2; }
 	| PARIZQ expresion PARDER       { $$ = $2; }
 	/*|  error   {
 		console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.last_column); 
