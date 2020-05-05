@@ -81,17 +81,31 @@ char factorial(integer a) {
     boolean varFactorial = "juan-á";
     integer varFactGlobal = 'x';
     fac = 31;
-     x = factorial(2,3);
+    x = factorial(2,3);
  
 }
 
 x = factorial(4,5);
 factorial();
+factorial($x);
 factorial(a=2.5, b='x', d="uno");
 
-/*evaluar[1+1];
-Evaluar[1+1*2];
-Evaluar[-(1+1*6/3-5+7)];
-Evaluar[-(1+1*6/3-5+1*-2)];
-Evaluar[-(1.6+1.45)];
-*/
+print(a);
+print(2+4*34);
+print(llamada());
+
+try {
+    integer dividendo = 10;
+    if (divisor < 0) {
+        boolean vv = true;
+        throw strC ArithmeticException();
+    }
+} catch (ArithmeticException e) {
+    print(e.message.option);
+}
+
+Global var1 := "Cadena"; 
+String [] cadena = var1.toCharArray();
+
+Global var1 := "Cadenita";
+char cad = var1.VAR33.toUpperCase().toLowerCase().charAt(0);

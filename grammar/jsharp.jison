@@ -87,6 +87,7 @@
 ">"                	return 'MAYOR';
 "<"                	return 'MENOR';
 "!"                	return 'NOT';
+"$"                	return 'DOLAR';
 
 \"[^\"]*\"				    { 
 								yytext = yytext.substr(1,yyleng-2); return 'CADENA'; 
@@ -98,7 +99,6 @@
 [0-9]+\b                    return 'ENTERO';
 ([a-zA-Z0-9\.\-ñÑ])+[j]		return 'ARCHIVO';
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'IDENTIFICADOR';
-
 
 <<EOF>>                     return 'EOF';
 .                           { 
@@ -182,6 +182,15 @@ instruccion
 	| llamada PCOMA {
 		$$ = $1;
 		console.log("LLAMADA -- " + $$);
+	}
+	| print PCOMA {
+		$$ = $print;
+	}
+	| trycatch {
+		$$ = $1;
+	}
+	| throw PCOMA {
+		$$ = $1;
 	}
 	| error PCOMA {
 			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
@@ -278,25 +287,6 @@ tipo
 	}
 ;
 
-/* asignacion
-	: ids_anidados IGUAL expresion {
-		$$ = $1 + $2 + $3;
-		console.log("ASIGNACION -- " + $1 + $2 + $3);
-		// todo - crear nodo ASIGNACION
-	}
-; */
-
-/* ids_anidados
-	: ids_anidados PUNTO expresion {
-		$$=$1;
-		$$.push($3);
-		console.log("IDS_ANIDADOS -- " +$$);
-	}
-	| expresion {
-		console.log("IDENTIFICADOR IDS_ANIDADOS -- " +$1);
-		$$ = [$1];
-	}
-; */
 ids_anidados
 	: ids_anidados PUNTO IDENTIFICADOR  {
 		$$=$1;
@@ -306,6 +296,10 @@ ids_anidados
 	| IDENTIFICADOR {
 		$$ = [$1];
 	}
+	/* | IDENTIFICADOR PARIZQ PARDER {
+		// espero una llamada o identificador - llamada() o ID
+		$$ = [$1];
+	} */
 ;
 
 lista_id
@@ -465,12 +459,18 @@ parametro
 ;
 
 llamada
-	: IDENTIFICADOR PARIZQ listaArgumentos PARDER {
+	: llamada PUNTO ids_anidados PARIZQ listaArgumentos PARDER {
 		$$ = $1 + "(" + $3 + ")";
-		console.log($$);
+		console.log("LLAMADA ANIDADOS UNO -- " +$$);
 		// todo - crear nodo llamada
 	}
+	| ids_anidados PARIZQ listaArgumentos PARDER {
+		$$ = $1 + $2 + $3 + $4;
+		console.log("LLAMADA ANIDADOS -- " +$$);
+	}
+
 ;
+
 
 listaArgumentos
 	: listaArgumentos COMA argumento {
@@ -483,7 +483,8 @@ listaArgumentos
 		console.log("ARGUMENTO -- " + $$);
 	}
 	| {
-		console.log("EMPTY ARGUMENTOS -- " + $1);
+		$$ = "";
+		console.log("ARGUMENTO EMPTY!!!!");
 	}
 ;
 
@@ -496,8 +497,29 @@ argumento
 		$$ = $1;
 		console.log($$);
 	}
-	| "$" IDENTIFICADOR {
+	| DOLAR IDENTIFICADOR{
 		$$ = $1 + $2;
+		console.log("ARGUMENTO DOLAR " + $$);
+	}
+;
+
+print
+	: PRINT PARIZQ expresion PARDER {
+		$$ = $PRINT + $2 + $3 + $4;
+		console.log("FUNCION PRINT -- " +$$);
+	}
+;
+
+trycatch
+	: TRY bloqueInstrucciones CATCH PARIZQ IDENTIFICADOR IDENTIFICADOR PARDER bloqueInstrucciones {
+		$$ = $2 + $3 + $4 + $5 + $6 + " " +$7 + $8;
+		console.log($$);
+	}
+;
+
+throw
+	: THROW STRC llamada {
+		$$ = $1 + " " + $2 + " " + $3;
 		console.log($$);
 	}
 ;
@@ -533,7 +555,7 @@ expresion
 	| DECIMAL                       { $$ = Number($1); }
 	| TRUE                      	{ $$ = Boolean($1); }
 	| FALSE                       	{ $$ = Boolean($1); }
-	| IDENTIFICADOR					{ $$ = $1; }
+	| ids_anidados					{ $$ = $1; }
 	| CADENA {
 		$$ = $1;
 	}
