@@ -99,6 +99,8 @@
 [0-9]+\b                    return 'ENTERO';
 ([a-zA-Z0-9\.\-ñÑ])+[j]		return 'ARCHIVO';
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'IDENTIFICADOR';
+([a-zA-Z])+	return 'TIPO_NOMBRE';
+
 
 <<EOF>>                     return 'EOF';
 .                           { 
@@ -142,10 +144,34 @@ instrucciones
 ;
 
 instruccion
+	: imports PCOMA {
+		$$ = $1;
+		console.log($$);
+	}
+	| declaraciones PCOMA {
+		$$ = $1;
+		console.log($$);
+	}
+	| definicionFuncion {
+		$$ = $1;
+		console.log($$);
+	}
+	// colocar PRINT
+	| error  PCOMA{
+			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+			//$$ = "ERROR"
+	}
+;
+
+/* instruccion
 	: imports PCOMA { 
 		$$ = $1;
-		console.log("INSTRUCCION IMPORTS " + $1);
+		console.log($$);
 	}
+	| declaracion PCOMA {
+		$$ = $1;
+		console.log($$);
+	} */
 	/* print */
 	/* | asignacion PCOMA {
 		$$ = $1;
@@ -165,7 +191,7 @@ instruccion
 	| for {
 		$$ = $1;
 	} */
-	| break PCOMA {
+	/* | break PCOMA {
 		$$ = $1;
 	}
 	| continue PCOMA {
@@ -173,7 +199,7 @@ instruccion
 	}
 	| return PCOMA {
 		$$ = $1;
-	}
+	} */
 /* 	| funcion {
 		$$ = $1;
 	} */
@@ -181,12 +207,12 @@ instruccion
 		$$ = $1;
 		console.log("LLAMADA -- " + $$);
 	} */
-	| print PCOMA {
+	/* | print PCOMA {
 		$$ = $print;
 	}
 	| expresion PCOMA {
 		$$ = $1;
-	}
+	} */
 	/* | trycatch {
 		$$ = $1;
 	}
@@ -196,12 +222,12 @@ instruccion
 /* 	| asignacionArreglo {
 		$$ = $1;
 	} */
-	| error PCOMA {
+/* 	| error PCOMA {
 			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 			//$$ = "ERROR"
 	}
 ;
-
+ */
 // IMPORTS
 
 imports
@@ -223,63 +249,24 @@ import
 
 // DECLARACIONES Y ASIGNACIONES
 
-declaracion
-	: type lista_id IGUAL expresion {
-		$$ = $1 + " " + $2 + " = " + $4;
-		console.log("declaracion 1 --" + $1 + " " + $2 + " = " + $4);
-		// todo - crear nodo declaracion
+declaraciones
+	: definicionTipo listaIds IGUAL expresion {
+		$$ = $1 + $2 + $3 + $4;
 	}
-	| VAR IDENTIFICADOR DPIGUAL expresion {
-		$$ = $1 + " " + $2 + " := " + $4;
-		console.log("declaracion 2 --" + $1 + " " + $2 + " := " + $4);
-		// todo - crear nodo declaracion
+	| definicionTipo listaIds {
+		$$ = $1 + $2;
 	}
-	| CONST IDENTIFICADOR DPIGUAL expresion {
-		$$ = $1 + " " + $2 + " := " + $4;
-		console.log("declaracion 3 --" + $1 + " " + $2 + " := " + $4);
-		// todo - crear nodo declaracion
-	}
-	| GLOBAL IDENTIFICADOR DPIGUAL expresion {
-		$$ = $1 + " " + $2 + " := " + $4;
-		console.log("declaracion 4 --" + $1 + " " + $2 + " := " + $4);
-		// todo - crear nodo declaracion
-	}
-	| type lista_id {
-		$$ = $1 + " " +  $2;
-		console.log("declaracion 5 --" + $1 + " " +  $2);
-		// todo - crear nodo declaracion
-	}
-	| type lista_id IGUAL STRC type {
-		$$ = $1 + " " + $2 + " = " + $4 + $5;
-		console.log("DECLARACION ARREGLOS --" + $$);
-		// todo - crear nodo declaracion
-	}
-	| ids_anidados IGUAL expresion {
-		$$ = $1 + $2 + $3;
-		console.log("ASIGNACION -- " + $1 + $2 + $3);
-		// todo - crear nodo ASIGNACION
-	}
-	| type IGUAL expresion {
-		$$ = $1 + $2 + $3;
-		console.log("ASIGNACION A ARREGLO -- " + $$);
+	| calificadorTipo IDENTIFICADOR DPIGUAL expresion {
+		$$ = $1 + $2 + $3 + $4;
 	}
 ;
 
-type
+definicionTipo
 	: tipo CORIZQ CORDER {
 		$$ = $1 + $2 + $3;
-		console.log("TYPE -- " + $$);
-		// todo - crear nodo tipo diferenciando array de variable
-	}
-	| tipo CORIZQ expresion CORDER {
-		$$ = $1 + $2 + $3 + $4;
-		console.log("TYPE -- " + $$);
-		// todo - crear nodo tipo diferenciando array de variable
 	}
 	| tipo {
 		$$ = $1;
-		console.log("TYPE -- " + $$);
-		// todo - crear nodo tipo diferenciando array de variable
 	}
 ;
 
@@ -299,13 +286,133 @@ tipo
 	| VOID {
 		$$ = $1;
 	}
-	/* | IDENTIFICADOR {
+	| TIPO_NOMBRE {
+		$$ = $1;
+	}
+;
+
+listaIds
+	: listaIds COMA IDENTIFICADOR {
+		$$ = $1;
+		$$.push($3);
+	}
+	| IDENTIFICADOR {
+		$$ = [$1];
+	}
+;
+
+calificadorTipo
+	: VAR {
+		$$ = $1;
+	}
+	| CONST {
+		$$ = $1;
+	}
+	| GLOBAL {
+		$$ = $1;
+	}
+;
+
+//FUNCIONES
+definicionFuncion
+	: definicionTipo IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
+		$$ = $1 + " " + $2 + "(" + $listaParametros + ")" + $bloqueInstrucciones;
+		// todo - crear nodo FUNCION
+	}
+;
+
+listaParametros
+	: listaParametros COMA parametro {
+		$$ = $1;
+		$$.push($3);
+	}
+	| parametro {
+		$$ = [$1];
+	}
+;
+
+parametro
+	: definicionTipo IDENTIFICADOR {
+		$$ = $1 + " " + $2;
+	}
+;
+
+/* declaracion
+	: type lista_id IGUAL expresion {
+		$$ = $1 + $2 + $3 + $4;
+		console.log("declaracion 1 --" + $1 + " " + $2 + " = " + $4);
+		// todo - crear nodo declaracion
+	}
+	| VAR IDENTIFICADOR DPIGUAL expresion {
+		$$ = $1 + $2 + $3 + $4;
+		console.log("declaracion 2 --" + $1 + " " + $2 + " := " + $4);
+		// todo - crear nodo declaracion
+	}
+	| CONST IDENTIFICADOR DPIGUAL expresion {
+		$$ = $1 + $2 + $3 + $4;
+		console.log("declaracion 3 --" + $1 + " " + $2 + " := " + $4);
+		// todo - crear nodo declaracion
+	}
+	| GLOBAL IDENTIFICADOR DPIGUAL expresion {
+		$$ = $1 + $2 + $3 + $4;
+		console.log("declaracion 4 --" + $1 + " " + $2 + " := " + $4);
+		// todo - crear nodo declaracion
+	}
+	| type lista_id {
+		$$ = $1 +  $2;
+		console.log("declaracion 5 --" + $1 + " " +  $2);
+		// todo - crear nodo declaracion
+	}
+	| type lista_id IGUAL STRC type {
+		$$ = $1 + $2 + $3 + $4 + $5;
+		console.log("DECLARACION ARREGLOS --" + $$);
+		// todo - crear nodo declaracion
+	}
+	| type IGUAL expresion {
+		$$ = $1 + $2 + $3;
+		console.log("ASIGNACION A ARREGLO -- " + $$);
+	}
+; */
+
+type
+	: tipo CORIZQ CORDER {
+		$$ = $1 + $2 + $3;
+		// todo - crear nodo tipo diferenciando array de variable
+	}
+	/* | tipo CORIZQ expresion CORDER {
+		$$ = $1 + $2 + $3 + $4;
+		console.log("TYPE -- " + $$);
+		// todo - crear nodo tipo diferenciando array de variable
+	} */
+	| tipo {
+		$$ = $1;
+		// todo - crear nodo tipo diferenciando array de variable
+	}
+;
+
+/* tipo
+	: INTEGER {
+		$$ = $1;
+	}
+	| DOUBLE {
+		$$ = $1;
+	}
+	| CHAR {
+		$$ = $1;
+	}
+	| BOOLEAN {
+		$$ = $1;
+	}
+	| VOID {
+		$$ = $1;
+	}
+	| IDENTIFICADOR {
 		$$ = $1;
 	} */
 	/* | ids_anidados {
 		$$ = $1;
 	} */
-;
+/* ; */
 
 ids_anidados
 	: ids_anidados PUNTO expresionAcceso  {
@@ -334,16 +441,6 @@ ids_anidados
 		// espero una llamada o identificador - llamada() o ID
 		$$ = [$1];
 	} */
-;
-
-lista_id
-	: lista_id COMA IDENTIFICADOR {
-		$$ = $1;
-		$$.push($3);
-	}
-	| IDENTIFICADOR {
-		$$ = [$1];
-	}
 ;
 
 //CONTROL DE FLUJO
@@ -459,31 +556,7 @@ return
 //CASTEO
 
 
-//FUNCIONES
 
-funcion
-	: type IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
-		$$ = $1 + " " + $2 + "(" + $listaParametros + ")" + $bloqueInstrucciones;
-		console.log($$);
-		// todo - crear nodo FUNCION
-	}
-;
-
-listaParametros
-	: listaParametros COMA parametro {
-		$$ = $1;
-		$$.push($3);
-	}
-	| parametro {
-		$$ = [$1];
-	}
-;
-
-parametro
-	: type IDENTIFICADOR {
-		$$ = $1 + " " + $2;
-	}
-;
 
 llamada
 	: IDENTIFICADOR PARIZQ listaArgumentos PARDER {
@@ -563,9 +636,9 @@ expresion
 		$$ = $1;
 		console.log($$);
 	}
-/* 	| expresion COMA expresionAsignacion {
+	| expresion COMA expresionAsignacion {
 		$$ = $1 + $2 + $3;
-	} */
+	}
 ;
 
 expresionAsignacion
@@ -573,7 +646,7 @@ expresionAsignacion
 		$$ = $1;
 	}
 	| expresionAsignacion IGUAL expresionOrExclusivo {
-		$$ = $1 + $2 + $3 + "ss";
+		$$ = $1 + $2 + $3;
 	}
 ;
 
@@ -745,6 +818,9 @@ expresionPrimaria
 	}
 	| FALSE {
 		$$ = $1
+	}
+	| LLAVIZQ expresionListaArgumentos LLAVDER {
+		$$ = $1 + $2 + $3;
 	}
 	| PARIZQ expresion PARDER {
 		$$ = $1 + $2 + $3;

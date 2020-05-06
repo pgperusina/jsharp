@@ -1,6 +1,6 @@
 import hola.j , funciones-recursivas.v2.j;
 
-(2*4) + 4;
+/*(2*4) + 4;
 3^3;
 (integer) a;
 (a-2/55) % 34;
@@ -12,3 +12,23 @@ import hola.j , funciones-recursivas.v2.j;
 -(1.6+1.45);
 
 ab.funcion().funcion[0].elemento = true;
+a.b.c[1] = {1,2,3,4,5,4};
+*/
+
+Integer Var1 = 5;
+abc[] Var1 = 5;
+Global Var2 := 10.24;
+const Var3 := true && true || false;
+String String = "juan-á";
+CHAR a = 'a';
+boolean v2,v3,v4 = true;
+global var_numeric := 1+1*2;
+double base,altura;
+
+char factorial(integer a) {
+    boolean varFactorial = "juan-á";
+    integer varFactGlobal = 'x';
+    fac = 31;
+    //x = factorial(2,3);
+ 
+}
