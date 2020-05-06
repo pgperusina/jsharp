@@ -109,7 +109,7 @@
 /lex
 
 /* Precedence and association - lower to higher*/
-%left CAST
+/* %left CAST
 %right IGUAL
 %right OPINCREMENTO OPDECREMENTO
 %left AND
@@ -119,8 +119,9 @@
 %nonassoc MENOR MAYOR MENORIGUAL MAYORIGUAL
 %left MAS MENOS
 %left POR DIVIDIDO MODULO
+%left PUNTO
 %right POWER
-%right UMENOS NOT
+%right UMENOS NOT */
 
 %start initial
 
@@ -145,14 +146,11 @@ instruccion
 		$$ = $1;
 		console.log("INSTRUCCION IMPORTS " + $1);
 	}
-	| declaracion PCOMA {
-		$$ = $1;
-		//console.log("declaracion");
-	}
+	/* print */
 	/* | asignacion PCOMA {
 		$$ = $1;
 	} */
-	| if {
+	/* | if {
 		$$ = $1;
 	}
 	| switch {
@@ -166,7 +164,7 @@ instruccion
 	}
 	| for {
 		$$ = $1;
-	}
+	} */
 	| break PCOMA {
 		$$ = $1;
 	}
@@ -176,22 +174,28 @@ instruccion
 	| return PCOMA {
 		$$ = $1;
 	}
-	| funcion {
+/* 	| funcion {
 		$$ = $1;
-	}
-	| llamada PCOMA {
+	} */
+	/* | llamada PCOMA {
 		$$ = $1;
 		console.log("LLAMADA -- " + $$);
-	}
+	} */
 	| print PCOMA {
 		$$ = $print;
 	}
-	| trycatch {
+	| expresion PCOMA {
+		$$ = $1;
+	}
+	/* | trycatch {
 		$$ = $1;
 	}
 	| throw PCOMA {
 		$$ = $1;
-	}
+	} */
+/* 	| asignacionArreglo {
+		$$ = $1;
+	} */
 	| error PCOMA {
 			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 			//$$ = "ERROR"
@@ -225,16 +229,6 @@ declaracion
 		console.log("declaracion 1 --" + $1 + " " + $2 + " = " + $4);
 		// todo - crear nodo declaracion
 	}
-	| type lista_id IGUAL STRC type {
-		$$ = $1 + " " + $2 + " = " + $4 + $5;
-		console.log("DECLARACION ARREGLOS --" + $$);
-		// todo - crear nodo declaracion
-	}
-	| ids_anidados IGUAL expresion {
-		$$ = $1 + $2 + $3;
-		console.log("ASIGNACION -- " + $1 + $2 + $3);
-		// todo - crear nodo ASIGNACION
-	}
 	| VAR IDENTIFICADOR DPIGUAL expresion {
 		$$ = $1 + " " + $2 + " := " + $4;
 		console.log("declaracion 2 --" + $1 + " " + $2 + " := " + $4);
@@ -255,22 +249,36 @@ declaracion
 		console.log("declaracion 5 --" + $1 + " " +  $2);
 		// todo - crear nodo declaracion
 	}
-	/*| error expresion {
-		console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-	}*/
+	| type lista_id IGUAL STRC type {
+		$$ = $1 + " " + $2 + " = " + $4 + $5;
+		console.log("DECLARACION ARREGLOS --" + $$);
+		// todo - crear nodo declaracion
+	}
+	| ids_anidados IGUAL expresion {
+		$$ = $1 + $2 + $3;
+		console.log("ASIGNACION -- " + $1 + $2 + $3);
+		// todo - crear nodo ASIGNACION
+	}
+	| type IGUAL expresion {
+		$$ = $1 + $2 + $3;
+		console.log("ASIGNACION A ARREGLO -- " + $$);
+	}
 ;
 
 type
 	: tipo CORIZQ CORDER {
 		$$ = $1 + $2 + $3;
+		console.log("TYPE -- " + $$);
 		// todo - crear nodo tipo diferenciando array de variable
 	}
 	| tipo CORIZQ expresion CORDER {
-		$$ = $1 + $2 + $3;
+		$$ = $1 + $2 + $3 + $4;
+		console.log("TYPE -- " + $$);
 		// todo - crear nodo tipo diferenciando array de variable
 	}
 	| tipo {
 		$$ = $1;
+		console.log("TYPE -- " + $$);
 		// todo - crear nodo tipo diferenciando array de variable
 	}
 ;
@@ -291,19 +299,25 @@ tipo
 	| VOID {
 		$$ = $1;
 	}
-	| ids_anidados {
+	/* | IDENTIFICADOR {
 		$$ = $1;
-	}
+	} */
+	/* | ids_anidados {
+		$$ = $1;
+	} */
 ;
 
 ids_anidados
-	: ids_anidados PUNTO IDENTIFICADOR  {
+	: ids_anidados PUNTO expresionAcceso  {
 		$$=[];
 		$$.push($1);
 		$$.push($3);
 		console.log("IDS ANIDADOS!! -- " +$$);
 	}
-	| ids_anidados PUNTO llamada
+	| expresionAcceso {
+		$$ = [$1];
+	}
+/* 	| ids_anidados PUNTO llamada
 	 {
 		$$=[];
 		$$.push($1);
@@ -315,7 +329,7 @@ ids_anidados
 	}
 	| IDENTIFICADOR {
 		$$ = $1;
-	}
+	} */
 	/* | IDENTIFICADOR PARIZQ PARDER {
 		// espero una llamada o identificador - llamada() o ID
 		$$ = [$1];
@@ -444,13 +458,6 @@ return
 
 //CASTEO
 
-cast
-	: PARIZQ tipo PARDER expresion {
-		/* $$ = "(" + $2 + ")" + " " + $4; */
-		$$ = $1 + $3;
-		// todo - crear nodo CAST
-	}
-;
 
 //FUNCIONES
 
@@ -544,7 +551,207 @@ throw
 	}
 ;
 
+accesoArreglo
+	: IDENTIFICADOR CORIZQ expresion CORDER {
+		$$ = $1 + $2 + $3 + $4;
+		console.log("ACCESO A ARREGLO --" + $$);
+	}
+;
+
 expresion
+	: expresionAsignacion {
+		$$ = $1;
+		console.log($$);
+	}
+/* 	| expresion COMA expresionAsignacion {
+		$$ = $1 + $2 + $3;
+	} */
+;
+
+expresionAsignacion
+	: expresionOrExclusivo {
+		$$ = $1;
+	}
+	| expresionAsignacion IGUAL expresionOrExclusivo {
+		$$ = $1 + $2 + $3 + "ss";
+	}
+;
+
+expresionOrExclusivo
+	: expresionOr {
+		$$ = $1;
+	}
+	| expresionOrExclusivo XOR expresionOr {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+expresionOr
+	: expresionAnd {
+		$$ = $1;
+	}
+	| expresionOr OR expresionAnd {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+expresionAnd
+	: expresionIgualdad {
+		$$ = $1;
+	}
+	| expresionAnd AND expresionIgualdad {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+expresionIgualdad
+	: expresionRelacional {
+		$$ = $1;
+	}
+	| expresionIgualdad TRIPLEIGUAL expresionRelacional {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionIgualdad IGUALA expresionRelacional {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionIgualdad DIFERENTEDE expresionRelacional {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+expresionRelacional
+	: expresionAditiva {
+		$$ = $1;
+	}
+	| expresionRelacional MAYOR expresionAditiva {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionRelacional MAYORIGUAL expresionAditiva {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionRelacional MENOR expresionAditiva {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionRelacional MENORIGUAL expresionAditiva {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+expresionAditiva
+	: expresionMultiplicativa {
+		$$ = $1;
+	}
+	| expresionAditiva MAS expresionMultiplicativa {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionAditiva MENOS expresionMultiplicativa {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+expresionMultiplicativa
+	: expresionCasteo {
+		$$ = $1;
+	}
+	| expresionMultiplicativa POR expresionCasteo {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionMultiplicativa DIVIDIDO expresionCasteo {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionMultiplicativa MODULO expresionCasteo {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+expresionCasteo
+	: expresionUnaria {
+		$$ = $1;
+	}
+	| PARIZQ tipo PARDER expresionCasteo {
+		$$ = $1 + $2 + $3 + $4;
+	}
+;
+
+expresionUnaria
+	: expresionPostfix {
+		$$ = $1;
+	}
+	| NOT expresionUnaria {
+		$$ = $1 + $2;
+	}
+	| MENOS expresionUnaria %prec UMENOS {
+		$$ = $1 + $2;
+	}
+	/* | expresionUnaria POWER expresionUnaria {
+		$$ = $1 + $2 + $3;
+	} */
+;
+
+expresionPostfix
+	: expresionPrimaria {
+		$$ = $1;
+	}
+	| expresionPostfix CORIZQ expresion CORDER {
+		$$ = $1 + $2 + $3 + $4;
+	}
+	| expresionPostfix PARIZQ PARDER {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionPostfix PARIZQ expresionListaArgumentos PARDER {
+		$$ = $1 + $2 + $3 + $4;
+	}
+	| expresionPostfix PUNTO IDENTIFICADOR {
+		$$ = $1 + $2 + $3;
+	}
+	| expresionPostfix POWER {
+		$$ = $1 + $2;
+	}
+	| expresionPostfix OPINCREMENTO {
+		$$ = $1 + $2;
+	}
+	| expresionPostfix OPDECREMENTO {
+		$$ = $1 + $2;
+	}
+;
+
+expresionListaArgumentos
+	: expresionAsignacion {
+		$$ = $1;
+	}
+	| expresionListaArgumentos COMA expresionAsignacion {
+		$$ = $1+ $2 + $3;
+	}
+;
+
+expresionPrimaria
+	: IDENTIFICADOR {
+		$$ = $1;
+	}
+	| CADENA {
+		$$ = $1;
+	}
+	| CARACTER {
+		$$ = $1;
+	}
+	| ENTERO {
+		$$ = Number($1);
+	}
+	| DECIMAL {
+		$$ = Number($1);
+	}
+	| TRUE {
+		$$ = $1
+	}
+	| FALSE {
+		$$ = $1
+	}
+	| PARIZQ expresion PARDER {
+		$$ = $1 + $2 + $3;
+	}
+;
+
+/* expresion
 	: expresion OPINCREMENTO    	{ $$ = $1 + 1; }
 	| expresion OPDECREMENTO    	{ $$ = $1 - 1; }
 	| expresion MAS expresion       { $$ = $1 + $3; }
@@ -552,7 +759,7 @@ expresion
 	| expresion POR expresion       { $$ = $1 * $3; }
 	| expresion DIVIDIDO expresion  { $$ = $1 / $3; }
 	| expresion MODULO expresion  	{ $$ = $1 % $3; }
-	| expresion POWER expresion		{ $$ = $1 * $1; /* todo - logica para power */}
+	| expresion POWER expresion		{ $$ = $1 * $1;}
 	| expresion XOR expresion		{ $$ = $1 ^ $3; }
 	| expresion OR expresion		{ $$ = $1 || $3; }
 	| expresion AND expresion		{ $$ = $1 && $3; }
@@ -565,26 +772,30 @@ expresion
 	| expresion DIFERENTEDE expresion	{ $$ = $1 != $3; }
 	| MENOS expresion %prec UMENOS   { $$ = $2 *-1; }
 	| NOT expresion 				 { $$ = !$2; }
-	/* | llamada {
+	
+	| llamada {
 		$$ = $1;
-	} */
-	/* | cast {
-		$$ = $1;
-	} */
+	}
+	
 	| ENTERO                        { $$ = Number($1); }
 	| DECIMAL                       { $$ = Number($1); }
 	| TRUE                      	{ $$ = Boolean($1); }
 	| FALSE                       	{ $$ = Boolean($1); }
-	| ids_anidados					{ $$ = $1; }
+	| IDENTIFICADOR					{ $$ = $1; }
 	| CADENA {
 		$$ = $1;
 	}
-	|CARACTER {
+	| CARACTER {
 		$$ = $1;
 	}
-	| LLAVIZQ listaArgumentos LLAVDER { $$ = $2; }
+	| LLAVIZQ listaArgumentos LLAVDER { 
+		$$ = $2;
+		console.log("lista expresiones inicializacion arreglos -- " + $$); 
+	}
+	| accesoArreglo {
+		$$ = $1;
+		console.log("Acceso a arreglo en EXP -- " + $$);
+	}
 	| PARIZQ expresion PARDER       { $$ = $2; }
-	/*|  error   {
-		console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.last_column); 
-	}*/
-;
+	
+; */
