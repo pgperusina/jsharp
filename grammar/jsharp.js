@@ -75,7 +75,7 @@ var jsharp = (function(){
 var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,21],$V1=[1,22],$V2=[1,25],$V3=[1,44],$V4=[1,45],$V5=[1,46],$V6=[1,47],$V7=[1,48],$V8=[1,40],$V9=[1,41],$Va=[1,42],$Vb=[1,26],$Vc=[1,57],$Vd=[1,27],$Ve=[1,71],$Vf=[1,28],$Vg=[1,29],$Vh=[1,30],$Vi=[1,31],$Vj=[1,32],$Vk=[1,33],$Vl=[1,34],$Vm=[1,68],$Vn=[1,35],$Vo=[1,36],$Vp=[1,37],$Vq=[1,69],$Vr=[1,60],$Vs=[1,59],$Vt=[1,62],$Vu=[1,63],$Vv=[1,64],$Vw=[1,65],$Vx=[1,66],$Vy=[1,67],$Vz=[1,70],$VA=[2,5,25,33,38,39,40,41,42,43,44,45,46,49,53,55,56,57,60,62,63,64,65,70,71,72,76,77,78,80,81,101,107,114,115,116,117,118,119,120],$VB=[2,127],$VC=[1,97],$VD=[1,100],$VE=[1,104],$VF=[9,27,31,36,50,56,61],$VG=[1,106],$VH=[9,27,31,33,35,36,49,50,56,61,85,87,89,91,92,93,95,96,97,98,100,101,103,104,105,108,111,112,113],$VI=[9,27,31,36,50,56,61,85],$VJ=[1,107],$VK=[9,27,31,36,50,56,61,85,87],$VL=[1,108],$VM=[9,27,31,36,50,56,61,85,87,89],$VN=[1,109],$VO=[1,110],$VP=[1,111],$VQ=[9,27,31,36,50,56,61,85,87,89,91,92,93],$VR=[1,112],$VS=[1,113],$VT=[1,114],$VU=[1,115],$VV=[9,27,31,36,50,56,61,85,87,89,91,92,93,95,96,97,98],$VW=[1,116],$VX=[1,117],$VY=[9,27,31,36,50,56,61,85,87,89,91,92,93,95,96,97,98,100,101],$VZ=[1,118],$V_=[1,119],$V$=[1,120],$V01=[9,27,31,36,50,56,61,85,87,89,91,92,93,95,96,97,98,100,101,103,104,105],$V11=[1,121],$V21=[9,27,31,36,50,56,61,85,87,89,91,92,93,95,96,97,98,100,101,103,104,105,108],$V31=[1,124],$V41=[1,125],$V51=[1,126],$V61=[1,127],$V71=[1,128],$V81=[1,130],$V91=[9,27,31,35,36,49,50,56,61,85,87,89,91,92,93,95,96,97,98,100,101,103,104,105,108,111,112,113],$Va1=[2,5,25,27,33,38,39,40,41,42,43,44,45,46,49,53,55,56,57,60,62,63,64,65,70,71,72,76,77,78,80,81,101,107,114,115,116,117,118,119,120],$Vb1=[1,139],$Vc1=[9,27,31],$Vd1=[2,38],$Ve1=[1,186],$Vf1=[27,50,56],$Vg1=[1,194],$Vh1=[9,33,49,55,76,81,101,107,114,115,116,117,118,119,120],$Vi1=[1,211],$Vj1=[1,220],$Vk1=[27,36,50],$Vl1=[1,225],$Vm1=[33,49,50,55,76,81,101,107,114,115,116,117,118,119,120],$Vn1=[1,252],$Vo1=[1,253],$Vp1=[56,60,62];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"initial":3,"instrucciones":4,"EOF":5,"instruccion":6,"imports":7,"declaraciones":8,"PCOMA":9,"asignaciones":10,"definicionEstructura":11,"definicionFuncion":12,"if":13,"switch":14,"while":15,"doWhile":16,"for":17,"break":18,"continue":19,"return":20,"print":21,"trycatch":22,"throw":23,"expresion":24,"IMPORT":25,"import":26,"COMA":27,"ARCHIVO":28,"definicionTipo":29,"listaIds":30,"IGUAL":31,"calificadorTipo":32,"IDENTIFICADOR":33,"DPIGUAL":34,"CORIZQ":35,"CORDER":36,"tipo":37,"INTEGER":38,"DOUBLE":39,"CHAR":40,"BOOLEAN":41,"VOID":42,"VAR":43,"CONST":44,"GLOBAL":45,"DEFINE":46,"AS":47,"listaParametros":48,"PARIZQ":49,"PARDER":50,"bloqueInstrucciones":51,"parametro":52,"IF":53,"ELSE":54,"LLAVIZQ":55,"LLAVDER":56,"SWITCH":57,"cases":58,"case":59,"CASE":60,"DOSPUNTOS":61,"DEFAULT":62,"WHILE":63,"DO":64,"FOR":65,"inicio":66,"condicion":67,"final":68,"expresionOrExclusivo":69,"BREAK":70,"CONTINUE":71,"RETURN":72,"llamada":73,"listaArgumentos":74,"argumento":75,"DOLAR":76,"PRINT":77,"TRY":78,"CATCH":79,"THROW":80,"STRC":81,"expresionPostfix":82,"expresionAsignacion":83,"expresionOr":84,"XOR":85,"expresionAnd":86,"OR":87,"expresionIgualdad":88,"AND":89,"expresionRelacional":90,"TRIPLEIGUAL":91,"IGUALA":92,"DIFERENTEDE":93,"expresionAditiva":94,"MAYOR":95,"MAYORIGUAL":96,"MENOR":97,"MENORIGUAL":98,"expresionMultiplicativa":99,"MAS":100,"MENOS":101,"expresionCasteo":102,"POR":103,"DIVIDIDO":104,"MODULO":105,"expresionUnaria":106,"NOT":107,"POWER":108,"expresionPrimaria":109,"expresionListaArgumentos":110,"PUNTO":111,"OPINCREMENTO":112,"OPDECREMENTO":113,"CADENA":114,"CARACTER":115,"ENTERO":116,"DECIMAL":117,"TRUE":118,"FALSE":119,"NULL":120,"$accept":0,"$end":1},
+symbols_: {"error":2,"initial":3,"instrucciones":4,"EOF":5,"instruccion":6,"imports":7,"declaraciones":8,"PCOMA":9,"asignacionArreglo":10,"definicionEstructura":11,"definicionFuncion":12,"if":13,"switch":14,"while":15,"doWhile":16,"for":17,"break":18,"continue":19,"return":20,"print":21,"trycatch":22,"throw":23,"expresion":24,"IMPORT":25,"import":26,"COMA":27,"ARCHIVO":28,"definicionTipo":29,"listaIds":30,"IGUAL":31,"calificadorTipo":32,"IDENTIFICADOR":33,"DPIGUAL":34,"CORIZQ":35,"CORDER":36,"tipo":37,"INTEGER":38,"DOUBLE":39,"CHAR":40,"BOOLEAN":41,"VOID":42,"VAR":43,"CONST":44,"GLOBAL":45,"DEFINE":46,"AS":47,"listaParametros":48,"PARIZQ":49,"PARDER":50,"bloqueInstrucciones":51,"parametro":52,"IF":53,"ELSE":54,"LLAVIZQ":55,"LLAVDER":56,"SWITCH":57,"cases":58,"case":59,"CASE":60,"DOSPUNTOS":61,"DEFAULT":62,"WHILE":63,"DO":64,"FOR":65,"inicio":66,"condicion":67,"final":68,"expresionOrExclusivo":69,"BREAK":70,"CONTINUE":71,"RETURN":72,"llamada":73,"listaArgumentos":74,"argumento":75,"DOLAR":76,"PRINT":77,"TRY":78,"CATCH":79,"THROW":80,"STRC":81,"expresionPostfix":82,"expresionAsignacion":83,"expresionOr":84,"XOR":85,"expresionAnd":86,"OR":87,"expresionIgualdad":88,"AND":89,"expresionRelacional":90,"TRIPLEIGUAL":91,"IGUALA":92,"DIFERENTEDE":93,"expresionAditiva":94,"MAYOR":95,"MAYORIGUAL":96,"MENOR":97,"MENORIGUAL":98,"expresionMultiplicativa":99,"MAS":100,"MENOS":101,"expresionCasteo":102,"POR":103,"DIVIDIDO":104,"MODULO":105,"expresionUnaria":106,"NOT":107,"POWER":108,"expresionPrimaria":109,"expresionListaArgumentos":110,"PUNTO":111,"OPINCREMENTO":112,"OPDECREMENTO":113,"CADENA":114,"CARACTER":115,"ENTERO":116,"DECIMAL":117,"TRUE":118,"FALSE":119,"NULL":120,"$accept":0,"$end":1},
 terminals_: {2:"error",5:"EOF",9:"PCOMA",25:"IMPORT",27:"COMA",28:"ARCHIVO",31:"IGUAL",33:"IDENTIFICADOR",34:"DPIGUAL",35:"CORIZQ",36:"CORDER",38:"INTEGER",39:"DOUBLE",40:"CHAR",41:"BOOLEAN",42:"VOID",43:"VAR",44:"CONST",45:"GLOBAL",46:"DEFINE",47:"AS",49:"PARIZQ",50:"PARDER",53:"IF",54:"ELSE",55:"LLAVIZQ",56:"LLAVDER",57:"SWITCH",60:"CASE",61:"DOSPUNTOS",62:"DEFAULT",63:"WHILE",64:"DO",65:"FOR",70:"BREAK",71:"CONTINUE",72:"RETURN",76:"DOLAR",77:"PRINT",78:"TRY",79:"CATCH",80:"THROW",81:"STRC",85:"XOR",87:"OR",89:"AND",91:"TRIPLEIGUAL",92:"IGUALA",93:"DIFERENTEDE",95:"MAYOR",96:"MAYORIGUAL",97:"MENOR",98:"MENORIGUAL",100:"MAS",101:"MENOS",103:"POR",104:"DIVIDIDO",105:"MODULO",107:"NOT",108:"POWER",111:"PUNTO",112:"OPINCREMENTO",113:"OPDECREMENTO",114:"CADENA",115:"CARACTER",116:"ENTERO",117:"DECIMAL",118:"TRUE",119:"FALSE",120:"NULL"},
 productions_: [0,[3,2],[4,2],[4,1],[6,1],[6,2],[6,2],[6,2],[6,1],[6,1],[6,1],[6,1],[6,1],[6,1],[6,2],[6,2],[6,2],[6,2],[6,1],[6,2],[6,2],[6,2],[7,2],[26,3],[26,1],[8,4],[8,2],[8,4],[8,4],[8,6],[29,3],[29,1],[37,1],[37,1],[37,1],[37,1],[37,1],[30,3],[30,1],[32,1],[32,1],[32,1],[10,6],[11,6],[12,6],[12,5],[12,6],[12,5],[12,8],[12,7],[48,3],[48,1],[52,2],[52,2],[52,4],[13,5],[13,7],[13,7],[51,3],[14,7],[58,2],[58,1],[59,4],[59,3],[15,5],[16,6],[17,7],[66,2],[66,1],[67,2],[67,1],[68,1],[68,0],[18,1],[19,1],[20,2],[73,4],[74,3],[74,1],[74,0],[75,3],[75,1],[75,2],[21,4],[22,8],[23,3],[24,1],[83,1],[83,3],[69,1],[69,3],[84,1],[84,3],[86,1],[86,3],[88,1],[88,3],[88,3],[88,3],[90,1],[90,3],[90,3],[90,3],[90,3],[94,1],[94,3],[94,3],[99,1],[99,3],[99,3],[99,3],[102,1],[102,4],[106,1],[106,2],[106,2],[106,3],[82,1],[82,4],[82,3],[82,3],[82,4],[82,3],[82,2],[82,2],[110,1],[110,3],[109,1],[109,1],[109,1],[109,1],[109,1],[109,1],[109,1],[109,2],[109,2],[109,2],[109,1],[109,3],[109,3]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
@@ -96,8 +96,9 @@ case 3: case 38: case 51: case 61: case 78: case 125:
 break;
 case 4:
 
-		this.$ = $$[$0];
-		console.log("IMPORTS |||| " + this.$);
+		this.$ = new Import($$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0]; */
+		console.log("IMPORTS |||| " +JSON.stringify(this.$, null, 2));
 	
 break;
 case 5:
@@ -109,13 +110,13 @@ break;
 case 6:
 
 		this.$ = $$[$0-1];
-		console.log("ASIGNACION  |||| " + this.$);
+		console.log("ASIGNACION ARREGLO |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 7:
 
 		this.$ = $$[$0-1];
-		console.log("DEFINICION ESTRUCTURA |||| " + this.$);
+		console.log("DEFINICION ESTRUCTURA |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 8:
@@ -165,7 +166,7 @@ case 17:
 		console.log(this.$);
 	
 break;
-case 18: case 81: case 86: case 87: case 89: case 91: case 93: case 95: case 99: case 104: case 107: case 111: case 113: case 117: case 127: case 128: case 137:
+case 18: case 81: case 86: case 87: case 89: case 91: case 93: case 95: case 99: case 104: case 107: case 111: case 113: case 117: case 128: case 137:
 
 		this.$ = $$[$0];
 	
@@ -280,31 +281,32 @@ case 37: case 50: case 77: case 126:
 break;
 case 39:
 
-		this.$ = new CalificadorTipo(CalificadorTipo.VAR);
+		this.$ = calificadores.VAR;
 		/* this.$ = $$[$0]; */
 	
 break;
 case 40:
 
-		this.$ = new CalificadorTipo(CalificadorTipo.CONST);
+		this.$ = calificadores.CONST;
 		/* this.$ = $$[$0]; */
 	
 break;
 case 41:
 
-		this.$ = new CalificadorTipo(CalificadorTipo.GLOBAL);
+		this.$ = calificadores.GLOBAL;
 		/* this.$ = $$[$0]; */
 	
 break;
 case 42:
 
-		this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
-		console.log("ASIGNACION POSICION ARREGLO -- " + this.$);
+		this.$ = new AsignacionArreglo($$[$0-5], $$[$0-3], $$[$0]);
+		/* this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
 	
 break;
 case 43:
 
-		this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
+		this.$ = new DefinicionEstructura($$[$0-4], $$[$0-1], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
 	
 break;
 case 44: case 46:
@@ -474,6 +476,12 @@ break;
 case 114: case 115: case 123: case 124: case 134: case 135: case 136:
 
 		this.$ = $$[$0-1] + $$[$0];
+	
+break;
+case 127:
+
+		this.$ = new Identificador($$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0]; */
 	
 break;
 case 129:
@@ -758,11 +766,14 @@ _handle_error:
     return true;
 }};
 
+	const Import = require('../analizador/instrucciones/Import');
+	const AsignacionArreglo = require('../analizador/instrucciones/AsignacionArreglo');
+	const DefinicionEstructura = require('../analizador/instrucciones/DefinicionEStructura');
 	const Valor = require('../analizador/expresiones/Valor');
+	const Identificador = require('../analizador/expresiones/Identificador');
 	const Declaracion  = require('../analizador/instrucciones/Declaracion');
 	const Tipo  = require('../analizador/tabla/Tipo').Tipo;
 	const Types  = require('../analizador/tabla/Tipo').Types;
-	const CalificadorTipo  = require('../analizador/tabla/CalificadorTipo').CalificadorTipo;
 	const calificadores  = require('../analizador/tabla/CalificadorTipo').calificadores;
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){

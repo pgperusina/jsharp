@@ -6,11 +6,14 @@
 * class imports
 **/
 %{
+	const Import = require('../analizador/instrucciones/Import');
+	const AsignacionArreglo = require('../analizador/instrucciones/AsignacionArreglo');
+	const DefinicionEstructura = require('../analizador/instrucciones/DefinicionEStructura');
 	const Valor = require('../analizador/expresiones/Valor');
+	const Identificador = require('../analizador/expresiones/Identificador');
 	const Declaracion  = require('../analizador/instrucciones/Declaracion');
 	const Tipo  = require('../analizador/tabla/Tipo').Tipo;
 	const Types  = require('../analizador/tabla/Tipo').Types;
-	const CalificadorTipo  = require('../analizador/tabla/CalificadorTipo').CalificadorTipo;
 	const calificadores  = require('../analizador/tabla/CalificadorTipo').calificadores;
 %}
 
@@ -155,20 +158,21 @@ instrucciones
 
 instruccion
 	: imports {
-		$$ = $1;
-		console.log("IMPORTS |||| " + $$);
+		$$ = new Import($1, this._$.first_line, this._$.first_column);
+		/* $$ = $1; */
+		console.log("IMPORTS |||| " +JSON.stringify($$, null, 2));
 	}
 	| declaraciones PCOMA {
 		$$ = $1;
 		console.log("DECLARACION |||| " + JSON.stringify($$, null, 2));
 	}
-	| asignaciones PCOMA {
+	| asignacionArreglo PCOMA {
 		$$ = $1;
-		console.log("ASIGNACION  |||| " + $$);
+		console.log("ASIGNACION ARREGLO |||| " + JSON.stringify($$, null, 2));
 	}
 	| definicionEstructura PCOMA {
 		$$ = $1;
-		console.log("DEFINICION ESTRUCTURA |||| " + $$);
+		console.log("DEFINICION ESTRUCTURA |||| " + JSON.stringify($$, null, 2));
 	}
 	| definicionFuncion {
 		$$ = $1;
@@ -313,29 +317,30 @@ listaIds
 
 calificadorTipo
 	: VAR {
-		$$ = new CalificadorTipo(CalificadorTipo.VAR);
+		$$ = calificadores.VAR;
 		/* $$ = $1; */
 	}
 	| CONST {
-		$$ = new CalificadorTipo(CalificadorTipo.CONST);
+		$$ = calificadores.CONST;
 		/* $$ = $1; */
 	}
 	| GLOBAL {
-		$$ = new CalificadorTipo(CalificadorTipo.GLOBAL);
+		$$ = calificadores.GLOBAL;
 		/* $$ = $1; */
 	}
 ;
 
-asignaciones
+asignacionArreglo
 	: IDENTIFICADOR CORIZQ expresion CORDER IGUAL expresion {
-		$$ = $1 + $2 + $3 + $4 + $5 + $6;
-		console.log("ASIGNACION POSICION ARREGLO -- " + $$);
+		$$ = new AsignacionArreglo($1, $3, $6);
+		/* $$ = $1 + $2 + $3 + $4 + $5 + $6; */
 	}
 ;
 
 definicionEstructura
 	: DEFINE IDENTIFICADOR AS CORIZQ listaParametros CORDER {
-		$$ = $1 + $2 + $3 + $4 + $5 + $6;
+		$$ = new DefinicionEstructura($2, $5, this._$.first_line, this._$.first_column);
+		/* $$ = $1 + $2 + $3 + $4 + $5 + $6; */
 	}
 ;
 //FUNCIONES
@@ -739,7 +744,8 @@ expresionListaArgumentos
 
 expresionPrimaria
 	: IDENTIFICADOR {
-		$$ = $1;
+		$$ = new Identificador($1, this._$.first_line, this._$.first_column);
+		/* $$ = $1; */
 	}
 	| CADENA {
 		$$ = $1;
@@ -783,52 +789,3 @@ expresionPrimaria
 		$$ = $1 + $2 + $3;
 	}
 ;
-
-/* expresion
-	: expresion OPINCREMENTO    	{ $$ = $1 + 1; }
-	| expresion OPDECREMENTO    	{ $$ = $1 - 1; }
-	| expresion MAS expresion       { $$ = $1 + $3; }
-	| expresion MENOS expresion     { $$ = $1 - $3; }
-	| expresion POR expresion       { $$ = $1 * $3; }
-	| expresion DIVIDIDO expresion  { $$ = $1 / $3; }
-	| expresion MODULO expresion  	{ $$ = $1 % $3; }
-	| expresion POWER expresion		{ $$ = $1 * $1;}
-	| expresion XOR expresion		{ $$ = $1 ^ $3; }
-	| expresion OR expresion		{ $$ = $1 || $3; }
-	| expresion AND expresion		{ $$ = $1 && $3; }
-	| expresion MENORIGUAL expresion	{ $$ = $1 <= $3; }
-	| expresion MAYORIGUAL expresion	{ $$ = $1 >= $3; }
-	| expresion MENOR expresion		{ $$ = $1 < $3; }
-	| expresion MAYOR expresion		{ $$ = $1 > $3; }
-	| expresion IGUALA expresion	{ $$ = $1 == $3; }
-	| expresion TRIPLEIGUAL expresion	{ $$ = $1 === $3; }
-	| expresion DIFERENTEDE expresion	{ $$ = $1 != $3; }
-	| MENOS expresion %prec UMENOS   { $$ = $2 *-1; }
-	| NOT expresion 				 { $$ = !$2; }
-	
-	| llamada {
-		$$ = $1;
-	}
-	
-	| ENTERO                        { $$ = Number($1); }
-	| DECIMAL                       { $$ = Number($1); }
-	| TRUE                      	{ $$ = Boolean($1); }
-	| FALSE                       	{ $$ = Boolean($1); }
-	| IDENTIFICADOR					{ $$ = $1; }
-	| CADENA {
-		$$ = $1;
-	}
-	| CARACTER {
-		$$ = $1;
-	}
-	| LLAVIZQ listaArgumentos LLAVDER { 
-		$$ = $2;
-		console.log("lista expresiones inicializacion arreglos -- " + $$); 
-	}
-	| accesoArreglo {
-		$$ = $1;
-		console.log("Acceso a arreglo en EXP -- " + $$);
-	}
-	| PARIZQ expresion PARDER       { $$ = $2; }
-	
-; */
