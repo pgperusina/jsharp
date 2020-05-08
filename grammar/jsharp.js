@@ -89,7 +89,7 @@ case 2: case 60:
 		this.$.push($$[$0]);
 	
 break;
-case 3: case 38: case 51: case 61: case 78:
+case 3: case 38: case 51: case 61: case 78: case 125:
 
 		this.$ = [$$[$0]];
 	
@@ -103,7 +103,7 @@ break;
 case 5:
 
 		this.$ = $$[$0-1];
-		console.log("DECLARACION |||| " + this.$);
+		console.log("DECLARACION |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 6:
@@ -165,7 +165,7 @@ case 17:
 		console.log(this.$);
 	
 break;
-case 18: case 31: case 32: case 33: case 34: case 35: case 36: case 39: case 40: case 41: case 81: case 86: case 87: case 89: case 91: case 93: case 95: case 99: case 104: case 107: case 111: case 113: case 117: case 125: case 127: case 128: case 129: case 137:
+case 18: case 81: case 86: case 87: case 89: case 91: case 93: case 95: case 99: case 104: case 107: case 111: case 113: case 117: case 127: case 128: case 137:
 
 		this.$ = $$[$0];
 	
@@ -201,38 +201,99 @@ case 24:
 break;
 case 25:
   // declaracion tipo 1
-		this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
+		this.$ = new Declaracion($$[$0-3], null, $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
 	
 break;
 case 26:
   // declaracion tipo 5
-		this.$ = $$[$0-1] + $$[$0];
+		this.$ = new Declaracion($$[$0-1], null, $$[$0], null, this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0-1] + $$[$0]; */
 	
 break;
 case 27:
-  // declaracion tipo 2, 3 y 4 - incluye estructuras
-		this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
+  // declaracion tipo 2, 3 y 4 - incluye estructuras en expresion (strc)
+		this.$ = new Declaracion(null, $$[$0-3], $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
 	
 break;
 case 28:
   // declaracion estructuras
-		this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0] ;
+		this.$ = new Declaracion(new Tipo(null, false, $$[$0-3]), null, $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0] ; */
 	
 break;
 case 29:
   // declaracion arreglos de estructuras
-		this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0] ;
+		this.$ = new Declaracion(new Tipo(null, true, $$[$0-5]), null, $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0] ; */
 	
 break;
-case 30: case 88: case 90: case 92: case 94: case 96: case 97: case 98: case 100: case 101: case 102: case 103: case 105: case 106: case 108: case 109: case 110: case 116: case 119: case 120: case 122: case 138: case 139:
+case 30:
 
-		this.$ = $$[$0-2] + $$[$0-1] + $$[$0];
+		this.$ = new Tipo($$[$0-2], true, null)
+		/* this.$ = $$[$0-2] + $$[$0-1] + $$[$0]; */
 	
 break;
-case 37: case 50: case 77:
+case 31:
+
+		this.$ = new Tipo($$[$0], false, null)
+		/* this.$ = $$[$0]; */
+		/* this.$ = $$[$0]; */
+	
+break;
+case 32:
+
+		this.$ = Types.INTEGER;
+		/* this.$ = $$[$0]; */
+	
+break;
+case 33:
+
+		this.$ = Types.DOUBLE;
+		/* this.$ = $$[$0]; */
+	
+break;
+case 34:
+
+		this.$ = Types.CHAR;
+		/* this.$ = $$[$0]; */
+	
+break;
+case 35:
+
+		this.$ = Types.BOOLEAN;
+		/* this.$ = $$[$0]; */
+	
+break;
+case 36:
+
+		this.$ = Types.VOID;
+		/* this.$ = $$[$0]; */
+	
+break;
+case 37: case 50: case 77: case 126:
 
 		this.$ = $$[$0-2];
 		this.$.push($$[$0]);
+	
+break;
+case 39:
+
+		this.$ = new CalificadorTipo(CalificadorTipo.VAR);
+		/* this.$ = $$[$0]; */
+	
+break;
+case 40:
+
+		this.$ = new CalificadorTipo(CalificadorTipo.CONST);
+		/* this.$ = $$[$0]; */
+	
+break;
+case 41:
+
+		this.$ = new CalificadorTipo(CalificadorTipo.GLOBAL);
+		/* this.$ = $$[$0]; */
 	
 break;
 case 42:
@@ -405,24 +466,44 @@ case 85:
 		this.$ = $$[$0-2] + " " + $$[$0-1] + " " + $$[$0];
 	
 break;
+case 88: case 90: case 92: case 94: case 96: case 97: case 98: case 100: case 101: case 102: case 103: case 105: case 106: case 108: case 109: case 110: case 116: case 119: case 120: case 122: case 138: case 139:
+
+		this.$ = $$[$0-2] + $$[$0-1] + $$[$0];
+	
+break;
 case 114: case 115: case 123: case 124: case 134: case 135: case 136:
 
 		this.$ = $$[$0-1] + $$[$0];
 	
 break;
-case 126:
+case 129:
 
-		this.$ = $$[$0-2]+ $$[$0-1] + $$[$0];
+		this.$ = new Valor(new Tipo(Types.CHAR, false, null), $$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0]; */
 	
 break;
-case 130: case 131:
+case 130:
 
-		this.$ = Number($$[$0]);
+		this.$ = new Valor(new Tipo(Types.INTEGER, false, null), $$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = Number($$[$0]); */
 	
 break;
-case 132: case 133:
+case 131:
 
-		this.$ = $$[$0]
+		this.$ = new Valor(new Tipo(Types.DOUBLE, false, null), $$[$0], this._$.first_line, this._$.first_column);
+		/* this.$ = Number($$[$0]); */
+	
+break;
+case 132:
+
+		this.$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 1, this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0] */
+	
+break;
+case 133:
+
+		this.$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 0, this._$.first_line, this._$.first_column);
+		/* this.$ = $$[$0] */
 	
 break;
 }
@@ -676,6 +757,13 @@ _handle_error:
 
     return true;
 }};
+
+	const Valor = require('../analizador/expresiones/Valor');
+	const Declaracion  = require('../analizador/instrucciones/Declaracion');
+	const Tipo  = require('../analizador/tabla/Tipo').Tipo;
+	const Types  = require('../analizador/tabla/Tipo').Types;
+	const CalificadorTipo  = require('../analizador/tabla/CalificadorTipo').CalificadorTipo;
+	const calificadores  = require('../analizador/tabla/CalificadorTipo').calificadores;
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
 var lexer = ({
@@ -1007,174 +1095,170 @@ switch($avoiding_name_collisions) {
 case 0:
 break;
 case 1:
-break;
-case 2:
                                             console.log("comment one line");
                                             //console.log(yy_.yytext);
                                         
 break;
-case 3:
+case 2:
                                             console.log("comment ML");
                                             //console.log(yy_.yytext);
                                         
 break;
-case 4:return 120;
+case 3:return 120;
 break;
-case 5:return 38;
+case 4:return 38;
 break;
-case 6:return 39;
+case 5:return 39;
 break;
-case 7:return 40;
+case 6:return 40;
 break;
-case 8:return 41;
+case 7:return 41;
 break;
-case 9:return 25;
+case 8:return 25;
 break;
-case 10:return 43;
+case 9:return 43;
 break;
-case 11:return 44;
+case 10:return 44;
 break;
-case 12:return 45;
+case 11:return 45;
 break;
-case 13:return 118;
+case 12:return 118;
 break;
-case 14:return 119;
+case 13:return 119;
 break;
-case 15:return 53;
+case 14:return 53;
 break;
-case 16:return 54;
+case 15:return 54;
 break;
-case 17:return 57;
+case 16:return 57;
 break;
-case 18:return 60;
+case 17:return 60;
 break;
-case 19:return 62;
+case 18:return 62;
 break;
-case 20:return 70;
+case 19:return 70;
 break;
-case 21:return 71;
+case 20:return 71;
 break;
-case 22:return 72;
+case 21:return 72;
 break;
-case 23:return 77;
+case 22:return 77;
 break;
-case 24:return 'PUBLIC';
+case 23:return 'PUBLIC';
 break;
-case 25:return 'PRIVATE';
+case 24:return 'PRIVATE';
 break;
-case 26:return 42;
+case 25:return 42;
 break;
-case 27:return 65;
+case 26:return 65;
 break;
-case 28:return 63;
+case 27:return 63;
 break;
-case 29:return 46;
+case 28:return 46;
 break;
-case 30:return 47;
+case 29:return 47;
 break;
-case 31:return 81;
+case 30:return 81;
 break;
-case 32:return 64;
+case 31:return 64;
 break;
-case 33:return 78;
+case 32:return 78;
 break;
-case 34:return 79;
+case 33:return 79;
 break;
-case 35:return 80;
+case 34:return 80;
 break;
-case 36:return 27;
+case 35:return 27;
 break;
-case 37:return 111;
+case 36:return 111;
 break;
-case 38:return 9;
+case 37:return 9;
 break;
-case 39:return 49;
+case 38:return 49;
 break;
-case 40:return 50;
+case 39:return 50;
 break;
-case 41:return 35;
+case 40:return 35;
 break;
-case 42:return 36;
+case 41:return 36;
 break;
-case 43:return 55;
+case 42:return 55;
 break;
-case 44:return 56;
+case 43:return 56;
 break;
-case 45:return 34;
+case 44:return 34;
 break;
-case 46:return 61;
+case 45:return 61;
 break;
-case 47:return 112;
+case 46:return 112;
 break;
-case 48:return 100;
+case 47:return 100;
 break;
-case 49:return 113;
+case 48:return 113;
 break;
-case 50:return 101;
+case 49:return 101;
 break;
-case 51:return 103;
+case 50:return 103;
 break;
-case 52:return 104;
+case 51:return 104;
 break;
-case 53:return 105;
+case 52:return 105;
 break;
-case 54:return 108;
+case 53:return 108;
 break;
-case 55:return 85;
+case 54:return 85;
 break;
-case 56:return 87;
+case 55:return 87;
 break;
-case 57:return 89;
+case 56:return 89;
 break;
-case 58:return 91;
+case 57:return 91;
 break;
-case 59:return 92;
+case 58:return 92;
 break;
-case 60:return 93;
+case 59:return 93;
 break;
-case 61:return 98;
+case 60:return 98;
 break;
-case 62:return 96;
+case 61:return 96;
 break;
-case 63:return 31;
+case 62:return 31;
 break;
-case 64:return 95;
+case 63:return 95;
 break;
-case 65:return 97;
+case 64:return 97;
 break;
-case 66:return 107;
+case 65:return 107;
 break;
-case 67:return 76;
+case 66:return 76;
 break;
-case 68: 
+case 67: 
 								yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2); return 114; 
 							
 break;
-case 69: 
+case 68: 
 								yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2); return 115; 
 							
 break;
-case 70:return 117;
+case 69:return 117;
 break;
-case 71:return 116;
+case 70:return 116;
 break;
-case 72:return 28;
+case 71:return 28;
 break;
-case 73:return 33;
+case 72:return 33;
 break;
-case 74:return 'TIPO_NOMBRE';
+case 73:return 5;
 break;
-case 75:return 5;
-break;
-case 76: 
+case 74: 
 								console.error('Error Léxico: ' + yy_.yytext + 
 								', en la linea: ' + yy_.yylloc.first_line + ', y la columna: ' + yy_.yylloc.first_column); 
 							
 break;
 }
 },
-rules: [/^(?:[ \r\t]+)/i,/^(?:\n)/i,/^(?:\/\/.*)/i,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/i,/^(?:null\b)/i,/^(?:integer\b)/i,/^(?:double\b)/i,/^(?:char\b)/i,/^(?:boolean\b)/i,/^(?:import\b)/i,/^(?:var\b)/i,/^(?:const\b)/i,/^(?:global\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:if\b)/i,/^(?:else\b)/i,/^(?:switch\b)/i,/^(?:case\b)/i,/^(?:default\b)/i,/^(?:break\b)/i,/^(?:continue\b)/i,/^(?:return\b)/i,/^(?:print\b)/i,/^(?:public\b)/i,/^(?:private\b)/i,/^(?:void\b)/i,/^(?:for\b)/i,/^(?:while\b)/i,/^(?:define\b)/i,/^(?:as\b)/i,/^(?:strc\b)/i,/^(?:do\b)/i,/^(?:try\b)/i,/^(?:catch\b)/i,/^(?:throw\b)/i,/^(?:,)/i,/^(?:\.)/i,/^(?:;)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:\{)/i,/^(?:\})/i,/^(?::=)/i,/^(?::)/i,/^(?:\+\+)/i,/^(?:\+)/i,/^(?:--)/i,/^(?:-)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:%)/i,/^(?:\^\^)/i,/^(?:\^)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:===)/i,/^(?:==)/i,/^(?:!=)/i,/^(?:<=)/i,/^(?:>=)/i,/^(?:=)/i,/^(?:>)/i,/^(?:<)/i,/^(?:!)/i,/^(?:\$)/i,/^(?:"[^\"]*")/i,/^(?:'[a-zA-ZñÑ^\']')/i,/^(?:[0-9]+(\.[0-9]+)\b)/i,/^(?:[0-9]+\b)/i,/^(?:([a-zA-Z0-9\.\-ñÑ])+[j])/i,/^(?:([a-zA-Z_])[a-zA-Z0-9_ñÑ]*)/i,/^(?:\w+)/i,/^(?:$)/i,/^(?:.)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76],"inclusive":true}}
+rules: [/^(?:\s+)/i,/^(?:\/\/.*)/i,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/i,/^(?:null\b)/i,/^(?:integer\b)/i,/^(?:double\b)/i,/^(?:char\b)/i,/^(?:boolean\b)/i,/^(?:import\b)/i,/^(?:var\b)/i,/^(?:const\b)/i,/^(?:global\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:if\b)/i,/^(?:else\b)/i,/^(?:switch\b)/i,/^(?:case\b)/i,/^(?:default\b)/i,/^(?:break\b)/i,/^(?:continue\b)/i,/^(?:return\b)/i,/^(?:print\b)/i,/^(?:public\b)/i,/^(?:private\b)/i,/^(?:void\b)/i,/^(?:for\b)/i,/^(?:while\b)/i,/^(?:define\b)/i,/^(?:as\b)/i,/^(?:strc\b)/i,/^(?:do\b)/i,/^(?:try\b)/i,/^(?:catch\b)/i,/^(?:throw\b)/i,/^(?:,)/i,/^(?:\.)/i,/^(?:;)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:\{)/i,/^(?:\})/i,/^(?::=)/i,/^(?::)/i,/^(?:\+\+)/i,/^(?:\+)/i,/^(?:--)/i,/^(?:-)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:%)/i,/^(?:\^\^)/i,/^(?:\^)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:===)/i,/^(?:==)/i,/^(?:!=)/i,/^(?:<=)/i,/^(?:>=)/i,/^(?:=)/i,/^(?:>)/i,/^(?:<)/i,/^(?:!)/i,/^(?:\$)/i,/^(?:"[^\"]*")/i,/^(?:'[a-zA-ZñÑ^\']')/i,/^(?:[0-9]+(\.[0-9]+)\b)/i,/^(?:[0-9]+\b)/i,/^(?:([a-zA-Z0-9\.\-ñÑ])+[j])/i,/^(?:([a-zA-Z_])[a-zA-Z0-9_ñÑ]*)/i,/^(?:$)/i,/^(?:.)/i],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74],"inclusive":true}}
 });
 return lexer;
 })();

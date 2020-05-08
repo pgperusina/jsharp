@@ -1,4 +1,4 @@
-export default class Simbolo {
+class Simbolo {
     id = '';
     tipo = null;
     valor = null;
@@ -43,4 +43,9 @@ export default class Simbolo {
 }
 
 
-export default class Tabla
+class Tabla {
+
+}
+
+module.exports = Simbolo;
+module.exports = Tabla;

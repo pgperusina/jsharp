@@ -2,6 +2,18 @@
  * JSharp parser
  */
 
+/**
+* class imports
+**/
+%{
+	const Valor = require('../analizador/expresiones/Valor');
+	const Declaracion  = require('../analizador/instrucciones/Declaracion');
+	const Tipo  = require('../analizador/tabla/Tipo').Tipo;
+	const Types  = require('../analizador/tabla/Tipo').Types;
+	const CalificadorTipo  = require('../analizador/tabla/CalificadorTipo').CalificadorTipo;
+	const calificadores  = require('../analizador/tabla/CalificadorTipo').calificadores;
+%}
+
 /* Lexical definition */
 %lex
 
@@ -10,8 +22,8 @@
 %%
 
 /* White spaces */
-[ \r\t]+            {}
-\n                  {}
+/* [\r\t]+            {} */
+\s+                  {}
 
 /* Comments */
 "//".*                             	 	{
@@ -99,8 +111,6 @@
 [0-9]+\b                    return 'ENTERO';
 ([a-zA-Z0-9\.\-ñÑ])+[j]		return 'ARCHIVO';
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*	return 'IDENTIFICADOR';
-\w+							return 'TIPO_NOMBRE';
-
 
 <<EOF>>                     return 'EOF';
 .                           { 
@@ -150,7 +160,7 @@ instruccion
 	}
 	| declaraciones PCOMA {
 		$$ = $1;
-		console.log("DECLARACION |||| " + $$);
+		console.log("DECLARACION |||| " + JSON.stringify($$, null, 2));
 	}
 	| asignaciones PCOMA {
 		$$ = $1;
@@ -235,46 +245,59 @@ import
 
 declaraciones
 	: definicionTipo listaIds IGUAL expresion {  // declaracion tipo 1
-		$$ = $1 + $2 + $3 + $4;
+		$$ = new Declaracion($1, null, $2, $4, this._$.first_line, this._$.first_column);
+		/* $$ = $1 + $2 + $3 + $4; */
 	}
 	| definicionTipo listaIds {  // declaracion tipo 5
-		$$ = $1 + $2;
+		$$ = new Declaracion($1, null, $2, null, this._$.first_line, this._$.first_column);
+		/* $$ = $1 + $2; */
 	}
-	| calificadorTipo IDENTIFICADOR DPIGUAL expresion {  // declaracion tipo 2, 3 y 4 - incluye estructuras
-		$$ = $1 + $2 + $3 + $4;
+	| calificadorTipo IDENTIFICADOR DPIGUAL expresion {  // declaracion tipo 2, 3 y 4 - incluye estructuras en expresion (strc)
+		$$ = new Declaracion(null, $1, $2, $4, this._$.first_line, this._$.first_column);
+		/* $$ = $1 + $2 + $3 + $4; */
 	}
 	| IDENTIFICADOR listaIds IGUAL expresion {  // declaracion estructuras
-		$$ = $1 + $2 + $3 + $4 ;
+		$$ = new Declaracion(new Tipo(null, false, $1), null, $2, $4, this._$.first_line, this._$.first_column);
+		/* $$ = $1 + $2 + $3 + $4 ; */
 	} 
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR IGUAL expresion {  // declaracion arreglos de estructuras
-		$$ = $1 + $2 + $3 + $4 + $5 + $6 ;
+		$$ = new Declaracion(new Tipo(null, true, $1), null, $4, $6, this._$.first_line, this._$.first_column);
+		/* $$ = $1 + $2 + $3 + $4 + $5 + $6 ; */
 	}
 ;
 
 definicionTipo
 	: tipo CORIZQ CORDER {
-		$$ = $1 + $2 + $3;
+		$$ = new Tipo($1, true, null)
+		/* $$ = $1 + $2 + $3; */
 	}
 	| tipo {
-		$$ = $1;
+		$$ = new Tipo($1, false, null)
+		/* $$ = $1; */
+		/* $$ = $1; */
 	}
 ;
 
 tipo
 	: INTEGER {
-		$$ = $1;
+		$$ = Types.INTEGER;
+		/* $$ = $1; */
 	}
 	| DOUBLE {
-		$$ = $1;
+		$$ = Types.DOUBLE;
+		/* $$ = $1; */
 	}
 	| CHAR {
-		$$ = $1;
+		$$ = Types.CHAR;
+		/* $$ = $1; */
 	}
 	| BOOLEAN {
-		$$ = $1;
+		$$ = Types.BOOLEAN;
+		/* $$ = $1; */
 	}
 	| VOID {
-		$$ = $1;
+		$$ = Types.VOID;
+		/* $$ = $1; */
 	}
 ;
 
@@ -290,13 +313,16 @@ listaIds
 
 calificadorTipo
 	: VAR {
-		$$ = $1;
+		$$ = new CalificadorTipo(CalificadorTipo.VAR);
+		/* $$ = $1; */
 	}
 	| CONST {
-		$$ = $1;
+		$$ = new CalificadorTipo(CalificadorTipo.CONST);
+		/* $$ = $1; */
 	}
 	| GLOBAL {
-		$$ = $1;
+		$$ = new CalificadorTipo(CalificadorTipo.GLOBAL);
+		/* $$ = $1; */
 	}
 ;
 
@@ -703,10 +729,11 @@ expresionPostfix
 
 expresionListaArgumentos
 	: expresionAsignacion {
-		$$ = $1;
+		$$ = [$1];
 	}
 	| expresionListaArgumentos COMA expresionAsignacion {
-		$$ = $1+ $2 + $3;
+		$$ = $1;
+		$$.push($3);
 	}
 ;
 
@@ -718,19 +745,24 @@ expresionPrimaria
 		$$ = $1;
 	}
 	| CARACTER {
-		$$ = $1;
+		$$ = new Valor(new Tipo(Types.CHAR, false, null), $1, this._$.first_line, this._$.first_column);
+		/* $$ = $1; */
 	}
 	| ENTERO {
-		$$ = Number($1);
+		$$ = new Valor(new Tipo(Types.INTEGER, false, null), $1, this._$.first_line, this._$.first_column);
+		/* $$ = Number($1); */
 	}
 	| DECIMAL {
-		$$ = Number($1);
+		$$ = new Valor(new Tipo(Types.DOUBLE, false, null), $1, this._$.first_line, this._$.first_column);
+		/* $$ = Number($1); */
 	}
 	| TRUE {
-		$$ = $1
+		$$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 1, this._$.first_line, this._$.first_column);
+		/* $$ = $1 */
 	}
 	| FALSE {
-		$$ = $1
+		$$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 0, this._$.first_line, this._$.first_column);
+		/* $$ = $1 */
 	}
 	| DOLAR IDENTIFICADOR {
 		$$ = $1 + $2;
