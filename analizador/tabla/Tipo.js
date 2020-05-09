@@ -1,9 +1,11 @@
 const Types = {
-    INTEGER: 'INTEGER',
-    DOUBLE: 'DOUBLE',
-    CHAR: 'CHAR',
-    BOOLEAN: 'BOOLEAN',
-    VOID: 'VOID'
+    INTEGER: 'integer',
+    DOUBLE: 'double',
+    CHAR: 'char',
+    BOOLEAN: 'boolean',
+    VOID: 'void',
+    NULL: 'null',
+    STRING: 'string'
 }
 
 class Tipo {

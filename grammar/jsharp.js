@@ -122,40 +122,40 @@ break;
 case 8:
 
 		this.$ = $$[$0];
-		console.log("FUNCION |||| " + this.$);
+		console.log("FUNCION |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 9:
 
 		this.$ = $$[$0];
-		console.log("IF |||| " + this.$);
+		console.log("IF |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 10:
 
 		this.$ = $$[$0];
-		console.log("SWITCH |||| " + this.$);
+		console.log("SWITCH |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 11:
 
 		this.$ = $$[$0];
-		console.log("WHILE |||| " + this.$);
+		console.log("WHILE |||| " +JSON.stringify(this.$, null, 2));
 	
 break;
 case 12:
 
 		this.$ = $$[$0];
-		console.log("DOWHILE |||| " + this.$);
+		console.log("DOWHILE |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 13:
 
 		this.$ = $$[$0];
-		console.log("FOR |||| " + this.$);
+		console.log("FOR |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
-case 14: case 15: case 16: case 19:
+case 14: case 15: case 16: case 58: case 138:
 
 		this.$ = $$[$0-1];
 	
@@ -163,18 +163,25 @@ break;
 case 17:
 
 		this.$ = $$[$0-1];
-		console.log(this.$);
+		console.log("PRINT |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
-case 18: case 81: case 86: case 87: case 89: case 91: case 93: case 95: case 99: case 104: case 107: case 111: case 113: case 117: case 128: case 137:
+case 18:
 
 		this.$ = $$[$0];
+		console.log("TRY-CATCH |||| " + JSON.stringify(this.$, null, 2));
+	
+break;
+case 19:
+
+		this.$ = $$[$0-1];
+		console.log("THROW |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 20:
 
 		this.$ = $$[$0-1];
-		console.log("EXPRESION |||| " + this.$);
+		console.log("EXPRESION |||| " + JSON.stringify(this.$, null, 2));
 	
 break;
 case 21:
@@ -309,108 +316,127 @@ case 43:
 		/* this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
 	
 break;
-case 44: case 46:
+case 44:
 
-		this.$ = $$[$0-5] + " " + $$[$0-4] + "(" + $$[$0-2] + ")" + $$[$0];
-		// todo - crear nodo FUNCION
+		/* this.$ = $$[$0-5] + " " + $$[$0-4] + "(" + $$[$0-2] + ")" + $$[$0]; */
+		this.$ = new Funcion($$[$0-5], $$[$0-4], $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
-case 45: case 47:
+case 45:
 
-		this.$ = $$[$0-4] + " " + $$[$0-3] + "( )" + $$[$0];
-		// todo - crear nodo FUNCION
+		/* this.$ = $$[$0-4] + " " + $$[$0-3] + "( )" + $$[$0]; */
+		this.$ = new Funcion($$[$0-4], $$[$0-3], null, $$[$0], this._$.first_line, this._$.first_column);
+	
+break;
+case 46:
+
+		/* this.$ = $$[$0-5] + " " + $$[$0-4] + "(" + $$[$0-2] + ")" + $$[$0]; */
+		this.$ = new Funcion(new Tipo(null, false, $$[$0-5]), $$[$0-4], $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
+	
+break;
+case 47:
+
+		/* this.$ = $$[$0-4] + " " + $$[$0-3] + "( )" + $$[$0]; */
+		this.$ = new Funcion(new Tipo(null, false, $$[$0-4]), $$[$0-3], null, $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 48:
 
-		this.$ = $$[$0-7] + $$[$0-6] + $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
-		// todo - crear nodo FUNCION
+		/* this.$ = $$[$0-7] + $$[$0-6] + $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new Funcion(new Tipo(null, true, $$[$0-7]), $$[$0-4], $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 49:
 
-		this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
-		// todo - crear nodo FUNCION
+		/* this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new Funcion(new Tipo(null, true, $$[$0-6]), $$[$0-3], null, $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
-case 52: case 53:
+case 52:
 
-		this.$ = $$[$0-1] + " " + $$[$0];
+		/* this.$ = $$[$0-1] + " " + $$[$0]; */
+		this.$ = new Parametro($$[$0-1], $$[$0], this._$.first_line, this._$.first_column);
+	
+break;
+case 53:
+
+		/* this.$ = $$[$0-1] + " " + $$[$0]; */
+		this.$ = new Parametro(new Tipo(null, false, $$[$0-1]), $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 54:
 
-		this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + " " + $$[$0];
+		/* this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] + " " + $$[$0]; */
+		this.$ = new Parametro(new Tipo(null, true, $$[$0-3]), $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 55:
  
-        this.$ = $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
-			// todo -- crear nodo de if
+        /* this.$ = $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new If($$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
 		
 break;
-case 56: case 57:
+case 56:
  
-		this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
-			// todo -- crear nodo de if
+		/* this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new IfElseIf($$[$0-4], $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
 		
 break;
-case 58:
-
-		// todo -- crear lista de instrucciones
-		this.$ = $$[$0-1];
-	
+case 57:
+ 
+		/* this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] + $$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new IfElse($$[$0-4], $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
+		
 break;
 case 59:
 
-		this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] +$$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
+		/* this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] +$$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new Switch($$[$0-4], $$[$0-1], this._$.first_line, this._$.first_column);
 		// todo - crear nodo switch
 	
 break;
 case 62:
 
-		this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] +$$[$0];
-		// todo - crear nodo case
+		/* this.$ = $$[$0-3] + $$[$0-2] + $$[$0-1] +$$[$0]; */
+		this.$ = new Caso($$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 63:
 
-		this.$ = $$[$0-2] + $$[$0-1] + $$[$0]
-		// todo - crear nodo case default
+		/* this.$ = $$[$0-2] + $$[$0-1] + $$[$0] */
+		this.$ = new CasoDefault($$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 64:
 
-		this.$ = $$[$0-4] + $$[$0-3] + $$[$0-2] +$$[$0-1] + $$[$0];
+		/* this.$ = $$[$0-4] + $$[$0-3] + $$[$0-2] +$$[$0-1] + $$[$0]; */
+		this.$ = new While($$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 65:
 
-		this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] +$$[$0-2] + $$[$0-1] + $$[$0];
-		// todo - crear nodo dowhile
+		/* this.$ = $$[$0-5] + $$[$0-4] + $$[$0-3] +$$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new DoWhile($$[$0-1], $$[$0-4], this._$.first_line, this._$.first_column);
 	
 break;
 case 66:
 
-		this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] +$$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0];
-		// todo - crear nodo for
+		/* this.$ = $$[$0-6] + $$[$0-5] + $$[$0-4] +$$[$0-3] + $$[$0-2] + $$[$0-1] + $$[$0]; */
+		this.$ = new For($$[$0-4], $$[$0-3], $$[$0-2], $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 67: case 69:
  
-		this.$ = $$[$0-1] + $$[$0];
+		this.$ = $$[$0-1];
 	
 break;
-case 68: case 70:
- this.$ = ""; 
+case 68: case 70: case 72:
+ this.$ = null; 
 break;
 case 71:
  
 		this.$ = $$[$0];
 	
-break;
-case 72:
- this.$ = "";
 break;
 case 73:
 
@@ -447,6 +473,11 @@ case 80:
 		this.$ = $$[$0-2] + "=" + $$[$0];
 	
 break;
+case 81: case 86: case 87: case 89: case 91: case 93: case 95: case 99: case 104: case 107: case 111: case 113: case 117:
+
+		this.$ = $$[$0];
+	
+break;
 case 82:
 
 		this.$ = $$[$0-1] + $$[$0];
@@ -468,12 +499,12 @@ case 85:
 		this.$ = $$[$0-2] + " " + $$[$0-1] + " " + $$[$0];
 	
 break;
-case 88: case 90: case 92: case 94: case 96: case 97: case 98: case 100: case 101: case 102: case 103: case 105: case 106: case 108: case 109: case 110: case 116: case 119: case 120: case 122: case 138: case 139:
+case 88: case 90: case 92: case 94: case 96: case 97: case 98: case 100: case 101: case 102: case 103: case 105: case 106: case 108: case 109: case 110: case 116: case 119: case 120: case 122:
 
 		this.$ = $$[$0-2] + $$[$0-1] + $$[$0];
 	
 break;
-case 114: case 115: case 123: case 124: case 134: case 135: case 136:
+case 114: case 115: case 123: case 124: case 134:
 
 		this.$ = $$[$0-1] + $$[$0];
 	
@@ -482,6 +513,11 @@ case 127:
 
 		this.$ = new Identificador($$[$0], this._$.first_line, this._$.first_column);
 		/* this.$ = $$[$0]; */
+	
+break;
+case 128:
+
+		this.$ = new Valor(new Tipo(Types.STRING, false, null), $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 129:
@@ -512,6 +548,26 @@ case 133:
 
 		this.$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 0, this._$.first_line, this._$.first_column);
 		/* this.$ = $$[$0] */
+	
+break;
+case 135:
+ //new Estudiante (inicializador de estructuras)
+		this.$ = $$[$0-1] + $$[$0];
+	
+break;
+case 136:
+ //new integer (inicializador de estructuras)
+		this.$ = $$[$0-1] + $$[$0];
+	
+break;
+case 137:
+
+		this.$ = new Valor(new Tipo(Types.NULL, false, null), 'null', this._$.first_line, this._$.first_column);
+	
+break;
+case 139:
+
+		this.$ = $$[$0-1]
 	
 break;
 }
@@ -767,11 +823,25 @@ _handle_error:
 }};
 
 	const Import = require('../analizador/instrucciones/Import');
+	const Declaracion  = require('../analizador/instrucciones/Declaracion');
 	const AsignacionArreglo = require('../analizador/instrucciones/AsignacionArreglo');
-	const DefinicionEstructura = require('../analizador/instrucciones/DefinicionEStructura');
+	const DefinicionEstructura = require('../analizador/instrucciones/DefinicionEstructura');
+	const Funcion = require('../analizador/instrucciones/Funcion');
+	const If = require('../analizador/instrucciones/If');
+	const IfElse = require('../analizador/instrucciones/IfElse');
+	const IfElseIf = require('../analizador/instrucciones/IfElseIf');
+	const Switch = require('../analizador/instrucciones/Switch');
+	const While = require('../analizador/instrucciones/While');
+	const DoWhile = require('../analizador/instrucciones/DoWhile');
+	const For = require('../analizador/instrucciones/For');
+
+
 	const Valor = require('../analizador/expresiones/Valor');
 	const Identificador = require('../analizador/expresiones/Identificador');
-	const Declaracion  = require('../analizador/instrucciones/Declaracion');
+	const Parametro = require('../analizador/expresiones/Parametro');
+	const Caso = require('../analizador/expresiones/Caso');
+	const CasoDefault = require('../analizador/expresiones/CasoDefault');
+
 	const Tipo  = require('../analizador/tabla/Tipo').Tipo;
 	const Types  = require('../analizador/tabla/Tipo').Types;
 	const calificadores  = require('../analizador/tabla/CalificadorTipo').calificadores;
