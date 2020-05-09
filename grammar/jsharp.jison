@@ -6,6 +6,8 @@
 * class imports
 **/
 %{
+	const Arbol = require('../analizador/Arbol');
+
 	const Import = require('../analizador/instrucciones/Import');
 	const Declaracion  = require('../analizador/instrucciones/Declaracion');
 	const AsignacionArreglo = require('../analizador/instrucciones/AsignacionArreglo');
@@ -18,6 +20,8 @@
 	const While = require('../analizador/instrucciones/While');
 	const DoWhile = require('../analizador/instrucciones/DoWhile');
 	const For = require('../analizador/instrucciones/For');
+	const TryCatch = require('../analizador/instrucciones/TryCatch');
+	const Print = require('../analizador/instrucciones/Print');
 
 
 	const Valor = require('../analizador/expresiones/Valor');
@@ -25,10 +29,32 @@
 	const Parametro = require('../analizador/expresiones/Parametro');
 	const Caso = require('../analizador/expresiones/Caso');
 	const CasoDefault = require('../analizador/expresiones/CasoDefault');
+	const AccesoArreglo = require('../analizador/expresiones/AccesoArreglo');
+	const LlamadaFuncion = require('../analizador/expresiones/LlamadaFuncion');
+	const AccesoPropiedadEstructura = require('../analizador/expresiones/AccesoPropiedadEstructura');
+	const ExpresionPostIncremento = require('../analizador/expresiones/ExpresionPostIncremento');
+	const ExpresionPostDecremento = require('../analizador/expresiones/ExpresionPostDecremento');
+	const ExpresionAsignacion = require('../analizador/expresiones/ExpresionAsignacion');
+	const ParametroPorValor = require('../analizador/expresiones/ParametroPorValor');
+	const InstanciaEstructura = require('../analizador/expresiones/InstanciaEstructura');
+	const Arreglo = require('../analizador/expresiones/Arreglo');
+	const ArregloExplicito = require('../analizador/expresiones/ArregloExplicito');
+	const Throw = require('../analizador/expresiones/Throw');
+	const ExpresionUnaria = require('../analizador/expresiones/ExpresionUnaria');
+	const ExpresionPotencia = require('../analizador/expresiones/ExpresionPotencia');
+	const ExpresionCasteo = require('../analizador/expresiones/ExpresionCasteo');
+	const Return = require('../analizador/expresiones/Return');
+	const ExpresionRelacional = require('../analizador/expresiones/ExpresionRelacional');
+	const ExpresionMultiplicativa = require('../analizador/expresiones/ExpresionMultiplicativa');
+	const ExpresionLogica = require('../analizador/expresiones/ExpresionLogica');
+	const ExpresionIgualdad = require('../analizador/expresiones/ExpresionIgualdad');
+	const ExpresionAditiva = require('../analizador/expresiones/ExpresionAditiva');
+	const Continue = require('../analizador/expresiones/Continue');
+	const Break = require('../analizador/expresiones/Break');
 
 	const Tipo  = require('../analizador/tabla/Tipo').Tipo;
 	const Types  = require('../analizador/tabla/Tipo').Types;
-	const calificadores  = require('../analizador/tabla/CalificadorTipo').calificadores;
+	const CalificadorTipo  = require('../analizador/tabla/CalificadorTipo').calificadores;
 %}
 
 /* Lexical definition */
@@ -157,7 +183,7 @@
 %% /* Grammar definition */
 
 initial
-	: instrucciones EOF
+	: instrucciones EOF {return new Arbol($1); }
 ;
 
 instrucciones
@@ -174,43 +200,43 @@ instruccion
 	: imports {
 		$$ = new Import($1, this._$.first_line, this._$.first_column);
 		/* $$ = $1; */
-		console.log("IMPORTS |||| " +JSON.stringify($$, null, 2));
+		//console.log("IMPORTS |||| " +JSON.stringify($$, null, 2));
 	}
 	| declaraciones PCOMA {
 		$$ = $1;
-		console.log("DECLARACION |||| " + JSON.stringify($$, null, 2));
+		//console.log("DECLARACION |||| " + JSON.stringify($$, null, 2));
 	}
 	| asignacionArreglo PCOMA {
 		$$ = $1;
-		console.log("ASIGNACION ARREGLO |||| " + JSON.stringify($$, null, 2));
+		//console.log("ASIGNACION ARREGLO |||| " + JSON.stringify($$, null, 2));
 	}
 	| definicionEstructura PCOMA {
 		$$ = $1;
-		console.log("DEFINICION ESTRUCTURA |||| " + JSON.stringify($$, null, 2));
+		//console.log("DEFINICION ESTRUCTURA |||| " + JSON.stringify($$, null, 2));
 	}
 	| definicionFuncion {
 		$$ = $1;
-		console.log("FUNCION |||| " + JSON.stringify($$, null, 2));
+		//console.log("FUNCION |||| " + JSON.stringify($$, null, 2));
 	}
 	| if {
 		$$ = $1;
-		console.log("IF |||| " + JSON.stringify($$, null, 2));
+		//console.log("IF |||| " + JSON.stringify($$, null, 2));
 	}
 	| switch {
 		$$ = $1;
-		console.log("SWITCH |||| " + JSON.stringify($$, null, 2));
+		//console.log("SWITCH |||| " + JSON.stringify($$, null, 2));
 	}
 	| while {
 		$$ = $1;
-		console.log("WHILE |||| " +JSON.stringify($$, null, 2));
+		//console.log("WHILE |||| " +JSON.stringify($$, null, 2));
 	}
 	| doWhile {
 		$$ = $1;
-		console.log("DOWHILE |||| " + JSON.stringify($$, null, 2));
+		//console.log("DOWHILE |||| " + JSON.stringify($$, null, 2));
 	}
 	| for {
 		$$ = $1;
-		console.log("FOR |||| " + JSON.stringify($$, null, 2));
+		//console.log("FOR |||| " + JSON.stringify($$, null, 2));
 	}
 	| break PCOMA {
 		$$ = $1;
@@ -223,22 +249,24 @@ instruccion
 	}
 	| print PCOMA {
 		$$ = $print;
-		console.log("PRINT |||| " + JSON.stringify($$, null, 2));
+		//console.log("PRINT |||| " + JSON.stringify($$, null, 2));
 	}
 	| trycatch {
 		$$ = $1;
-		console.log("TRY-CATCH |||| " + JSON.stringify($$, null, 2));
+		//console.log("TRY-CATCH |||| " + JSON.stringify($$, null, 2));
 	}
 	| throw PCOMA {
 		$$ = $1;
-		console.log("THROW |||| " + JSON.stringify($$, null, 2));
+		//console.log("THROW |||| " + JSON.stringify($$, null, 2));
 	}
 	| expresion PCOMA{
 		$$ = $1;
-		console.log("EXPRESION |||| " + JSON.stringify($$, null, 2));
+		//console.log("EXPRESION |||| " + JSON.stringify($$, null, 2));
 	}
-	| error  PCOMA{
-			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+	| error {
+			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' 
+			+ this._$.first_column);
+			//". Se esperaba [" + JSON.stringify($1) + "]."); 
 			//$$ = "ERROR"
 	}
 ;
@@ -247,7 +275,6 @@ instruccion
 imports
 	: IMPORT import  {
 			$$ = $2;
-			//todo crear nodo (import)
 		}
 ;
 
@@ -262,62 +289,48 @@ import
 ;
 
 // DECLARACIONES Y ASIGNACIONES
-
 declaraciones
 	: definicionTipo listaIds IGUAL expresion {  // declaracion tipo 1
 		$$ = new Declaracion($1, null, $2, $4, this._$.first_line, this._$.first_column);
-		/* $$ = $1 + $2 + $3 + $4; */
 	}
 	| definicionTipo listaIds {  // declaracion tipo 5
 		$$ = new Declaracion($1, null, $2, null, this._$.first_line, this._$.first_column);
-		/* $$ = $1 + $2; */
 	}
 	| calificadorTipo IDENTIFICADOR DPIGUAL expresion {  // declaracion tipo 2, 3 y 4 - incluye estructuras en expresion (strc)
 		$$ = new Declaracion(null, $1, $2, $4, this._$.first_line, this._$.first_column);
-		/* $$ = $1 + $2 + $3 + $4; */
 	}
 	| IDENTIFICADOR listaIds IGUAL expresion {  // declaracion estructuras
 		$$ = new Declaracion(new Tipo(null, false, $1), null, $2, $4, this._$.first_line, this._$.first_column);
-		/* $$ = $1 + $2 + $3 + $4 ; */
 	} 
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR IGUAL expresion {  // declaracion arreglos de estructuras
 		$$ = new Declaracion(new Tipo(null, true, $1), null, $4, $6, this._$.first_line, this._$.first_column);
-		/* $$ = $1 + $2 + $3 + $4 + $5 + $6 ; */
 	}
 ;
 
 definicionTipo
 	: tipo CORIZQ CORDER {
 		$$ = new Tipo($1, true, null)
-		/* $$ = $1 + $2 + $3; */
 	}
 	| tipo {
 		$$ = new Tipo($1, false, null)
-		/* $$ = $1; */
-		/* $$ = $1; */
 	}
 ;
 
 tipo
 	: INTEGER {
 		$$ = Types.INTEGER;
-		/* $$ = $1; */
 	}
 	| DOUBLE {
 		$$ = Types.DOUBLE;
-		/* $$ = $1; */
 	}
 	| CHAR {
 		$$ = Types.CHAR;
-		/* $$ = $1; */
 	}
 	| BOOLEAN {
 		$$ = Types.BOOLEAN;
-		/* $$ = $1; */
 	}
 	| VOID {
 		$$ = Types.VOID;
-		/* $$ = $1; */
 	}
 ;
 
@@ -333,56 +346,46 @@ listaIds
 
 calificadorTipo
 	: VAR {
-		$$ = calificadores.VAR;
-		/* $$ = $1; */
+		$$ = CalificadorTipo.VAR;
 	}
 	| CONST {
-		$$ = calificadores.CONST;
-		/* $$ = $1; */
+		$$ = CalificadorTipo.CONST;
 	}
 	| GLOBAL {
-		$$ = calificadores.GLOBAL;
-		/* $$ = $1; */
+		$$ = CalificadorTipo.GLOBAL;
 	}
 ;
 
 asignacionArreglo
 	: IDENTIFICADOR CORIZQ expresion CORDER IGUAL expresion {
-		$$ = new AsignacionArreglo($1, $3, $6);
-		/* $$ = $1 + $2 + $3 + $4 + $5 + $6; */
+		$$ = new AsignacionArreglo($1, $3, $6, this._$.first_line, this._$.first_column);
 	}
 ;
 
 definicionEstructura
 	: DEFINE IDENTIFICADOR AS CORIZQ listaParametros CORDER {
 		$$ = new DefinicionEstructura($2, $5, this._$.first_line, this._$.first_column);
-		/* $$ = $1 + $2 + $3 + $4 + $5 + $6; */
 	}
 ;
+
 //FUNCIONES
 definicionFuncion
 	: definicionTipo IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
-		/* $$ = $1 + " " + $2 + "(" + $listaParametros + ")" + $bloqueInstrucciones; */
 		$$ = new Funcion($1, $2, $4, $6, this._$.first_line, this._$.first_column);
 	}
 	| definicionTipo IDENTIFICADOR PARIZQ  PARDER bloqueInstrucciones {
-		/* $$ = $1 + " " + $2 + "( )" + $5; */
 		$$ = new Funcion($1, $2, null, $5, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
-		/* $$ = $1 + " " + $2 + "(" + $listaParametros + ")" + $bloqueInstrucciones; */
 		$$ = new Funcion(new Tipo(null, false, $1), $2, $4, $6, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR IDENTIFICADOR PARIZQ  PARDER bloqueInstrucciones {
-		/* $$ = $1 + " " + $2 + "( )" + $bloqueInstrucciones; */
 		$$ = new Funcion(new Tipo(null, false, $1), $2, null, $5, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
-		/* $$ = $1 + $2 + $3 + $4 + $5 + $6 + $7 + $8; */
 		$$ = new Funcion(new Tipo(null, true, $1), $4, $6, $8, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR PARIZQ PARDER bloqueInstrucciones {
-		/* $$ = $1 + $2 + $3 + $4 + $5 + $6 + $7; */
 		$$ = new Funcion(new Tipo(null, true, $1), $4, null, $7, this._$.first_line, this._$.first_column);
 	}
 ;
@@ -399,31 +402,31 @@ listaParametros
 
 parametro
 	: definicionTipo IDENTIFICADOR {
-		/* $$ = $1 + " " + $2; */
-		$$ = new Parametro($1, $2, this._$.first_line, this._$.first_column);
+		$$ = new Parametro($1, $2, null, this._$.first_line, this._$.first_column);
+	}
+	| definicionTipo IDENTIFICADOR IGUAL expresion {
+		$$ = new Parametro($1, $2, $4, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR IDENTIFICADOR {
-		/* $$ = $1 + " " + $2; */
-		$$ = new Parametro(new Tipo(null, false, $1), $2, this._$.first_line, this._$.first_column);
+		$$ = new Parametro(new Tipo(null, false, $1), $2, null, this._$.first_line, this._$.first_column);
+	}
+	| IDENTIFICADOR IDENTIFICADOR IGUAL expresion {
+		$$ = new Parametro(new Tipo(null, false, $1), $2, $4, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR {
-		/* $$ = $1 + $2 + $3 + " " + $4; */
-		$$ = new Parametro(new Tipo(null, true, $1), $4, this._$.first_line, this._$.first_column);
+		$$ = new Parametro(new Tipo(null, true, $1), $4, null, this._$.first_line, this._$.first_column);
 	}
 ;
 
 //CONTROL DE FLUJO
 if
 	: IF PARIZQ expresion PARDER bloqueInstrucciones { 
-        /* $$ = $1 + $2 + $3 + $4 + $5; */
 		$$ = new If($3, $5, this._$.first_line, this._$.first_column);
 		}
 	| IF PARIZQ expresion PARDER bloqueInstrucciones ELSE  if { 
-		/* $$ = $1 + $2 + $3 + $4 + $5 + $6 + $7; */
 		$$ = new IfElseIf($3, $5, $7, this._$.first_line, this._$.first_column);
 		}
 	| IF PARIZQ expresion PARDER bloqueInstrucciones ELSE bloqueInstrucciones { 
-		/* $$ = $1 + $2 + $3 + $4 + $5 + $6 + $7; */
 		$$ = new IfElse($3, $5, $7, this._$.first_line, this._$.first_column);
 		}
 ;
@@ -436,9 +439,7 @@ bloqueInstrucciones
 
 switch
 	: SWITCH PARIZQ expresion PARDER LLAVIZQ cases LLAVDER {
-		/* $$ = $1 + $2 + $3 +$4 + $5 + $6 + $7; */
 		$$ = new Switch($3, $6, this._$.first_line, this._$.first_column);
-		// todo - crear nodo switch
 	}
 ;
 
@@ -454,32 +455,27 @@ cases
 
 case
 	: CASE expresion DOSPUNTOS instrucciones {
-		/* $$ = $1 + $2 + $3 +$4; */
 		$$ = new Caso($2, $4, this._$.first_line, this._$.first_column);
 	}
 	| DEFAULT DOSPUNTOS instrucciones {
-		/* $$ = $1 + $2 + $3 */
 		$$ = new CasoDefault($3, this._$.first_line, this._$.first_column);
 	}
 ;
 
 while
 	: WHILE PARIZQ expresion PARDER bloqueInstrucciones {
-		/* $$ = $1 + $2 + $3 +$4 + $5; */
 		$$ = new While($3, $5, this._$.first_line, this._$.first_column);
 	}
 ;
 
 doWhile
 	: DO bloqueInstrucciones WHILE PARIZQ expresion PARDER {
-		/* $$ = $1 + $2 + $3 +$4 + $5 + $6; */
 		$$ = new DoWhile($5, $2, this._$.first_line, this._$.first_column);
 	}
 ;
 
 for
 	: FOR PARIZQ inicio condicion final PARDER bloqueInstrucciones {
-		/* $$ = $1 + $2 + $3 +$4 + $5 + $6 + $7; */
 		$$ = new For($3, $4, $5, $7, this._$.first_line, this._$.first_column);
 	}
 ;
@@ -507,85 +503,37 @@ final
 
 break
 	: BREAK {
-		$$ = $1;
-		// todo - crear nodo break
+		$$ = new Break(this._$.first_line, this._$.first_column);
 	}
 ;
 
 continue
 	: CONTINUE {
-		$$ = $1;
-		// todo - crear nodo continue
+		$$ = new Continue(this._$.first_line, this._$.first_column);
 	}
 ;
 
 return
 	: RETURN expresion {
-		$$ = $1 + " " + $2;
-		// todo - crear nodo return
-	}
-;
-
-//CASTEO
-
-
-
-
-llamada
-	: IDENTIFICADOR PARIZQ listaArgumentos PARDER {
-		$$ = $1 + "(" + $3 + ")";
-		console.log("LLAMADA  -- " +$$);
-		// todo - crear nodo llamada
-	}
-	/* | ids_anidados PARIZQ listaArgumentos PARDER {
-		$$ = $1 + $2 + $3 + $4;
-		console.log("LLAMADA ANIDADOS -- " +$$);
-	} */
-
-;
-
-
-listaArgumentos
-	: listaArgumentos COMA argumento {
-		$$ = $1;
-		$$.push($3);
-	}
-	| argumento {
-		$$ = [$1];
-	}
-	| {
-		$$ = "";
-	}
-;
-
-argumento
-	: IDENTIFICADOR IGUAL expresion {
-		$$ = $1 + "=" + $3;
-	}
-	| expresion {
-		$$ = $1;
-	}
-	| DOLAR IDENTIFICADOR{
-		$$ = $1 + $2;
-		console.log("ARGUMENTO DOLAR " + $$);
+		$$ = new Return($1, this._$.first_line, this._$.first_column);
 	}
 ;
 
 print
 	: PRINT PARIZQ expresion PARDER {
-		$$ = $PRINT + $2 + $3 + $4;
+		$$ = new Print($3, this._$.first_line, this._$.first_column);
 	}
 ;
 
 trycatch
 	: TRY bloqueInstrucciones CATCH PARIZQ IDENTIFICADOR IDENTIFICADOR PARDER bloqueInstrucciones {
-		$$ = $2 + $3 + $4 + $5 + $6 +$7 + $8;
+		$$ = new TryCatch($2, $5, $6, $8, this._$.first_line, this._$.first_column);
 	}
 ;
 
 throw
-	: THROW STRC expresionPostfix {
-		$$ = $1 + " " + $2 + " " + $3;
+	: THROW STRC IDENTIFICADOR PARIZQ PARDER {
+		$$ = new Throw($3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -595,13 +543,6 @@ expresion
 	: expresionAsignacion {
 		$$ = $1;
 	}
-	/* | expresion COMA expresionAsignacion {
-		$$ = $1 + $2 + $3;
-	} */
-/* 	| error PCOMA {
-			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-			//$$ = "ERROR"
-	} */
 ;
 
 expresionAsignacion
@@ -609,7 +550,7 @@ expresionAsignacion
 		$$ = $1;
 	}
 	| expresionAsignacion IGUAL expresionOrExclusivo {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionAsignacion($1, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -618,7 +559,7 @@ expresionOrExclusivo
 		$$ = $1;
 	}
 	| expresionOrExclusivo XOR expresionOr {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionLogica($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -627,7 +568,7 @@ expresionOr
 		$$ = $1;
 	}
 	| expresionOr OR expresionAnd {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionLogica($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -636,7 +577,7 @@ expresionAnd
 		$$ = $1;
 	}
 	| expresionAnd AND expresionIgualdad {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionLogica($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -645,13 +586,13 @@ expresionIgualdad
 		$$ = $1;
 	}
 	| expresionIgualdad TRIPLEIGUAL expresionRelacional {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionIgualdad($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionIgualdad IGUALA expresionRelacional {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionIgualdad($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionIgualdad DIFERENTEDE expresionRelacional {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionIgualdad($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -660,16 +601,16 @@ expresionRelacional
 		$$ = $1;
 	}
 	| expresionRelacional MAYOR expresionAditiva {
-		$$ = $1 + $2 + $3;
+		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionRelacional MAYORIGUAL expresionAditiva {
-		$$ = $1 + $2 + $3;
+		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionRelacional MENOR expresionAditiva {
-		$$ = $1 + $2 + $3;
+		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionRelacional MENORIGUAL expresionAditiva {
-		$$ = $1 + $2 + $3;
+		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -678,10 +619,10 @@ expresionAditiva
 		$$ = $1;
 	}
 	| expresionAditiva MAS expresionMultiplicativa {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionAditiva($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionAditiva MENOS expresionMultiplicativa {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionAditiva($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -690,13 +631,13 @@ expresionMultiplicativa
 		$$ = $1;
 	}
 	| expresionMultiplicativa POR expresionCasteo {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionMultiplicativa($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionMultiplicativa DIVIDIDO expresionCasteo {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionMultiplicativa($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionMultiplicativa MODULO expresionCasteo {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionMultiplicativa($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -705,7 +646,7 @@ expresionCasteo
 		$$ = $1;
 	}
 	| PARIZQ tipo PARDER expresionCasteo {
-		$$ = $1 + $2 + $3 + $4;
+		$$ = new ExpresionCasteo($2, $4, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -714,13 +655,14 @@ expresionUnaria
 		$$ = $1;
 	}
 	| NOT expresionUnaria {
-		$$ = $1 + $2;
+		$$ = new ExpresionUnaria($2, $1, this._$.first_line, this._$.first_column);
+	}
 	}
 	| MENOS expresionUnaria %prec UMENOS {
-		$$ = $1 + $2;
+		$$ = new ExpresionUnaria($2, $1, this._$.first_line, this._$.first_column);
 	}
 	| expresionUnaria POWER expresionUnaria {
-		$$ = $1 + $2 + $3;
+		$$ = new ExpresionPotencia($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -729,25 +671,25 @@ expresionPostfix
 		$$ = $1;
 	}
 	| expresionPostfix CORIZQ expresion CORDER {
-		$$ = $1 + $2 + $3 + $4;
+		$$ = new AccesoArreglo($1, $3, this._$.first_line, this._$.first_column);
 	}
-	| expresionPostfix CORIZQ CORDER {
+	/* | expresionPostfix CORIZQ CORDER {
 		$$ = $1 + $2 + $3;
-	}
+	} */
 	| expresionPostfix PARIZQ PARDER {
-		$$ = $1 + $2 + $3;
+		$$ = new LlamadaFuncion($1, [], this._$.first_line, this._$.first_column);
 	}
 	| expresionPostfix PARIZQ expresionListaArgumentos PARDER {
-		$$ = $1 + $2 + $3 + $4;
+		$$ = new LlamadaFuncion($1, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionPostfix PUNTO IDENTIFICADOR {
-		$$ = $1 + $2 + $3;
+		$$ = new AccesoPropiedadEstructura($1, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionPostfix OPINCREMENTO {
-		$$ = $1 + $2;
+		$$ = new ExpresionPostIncremento($1, this._$.first_line, this._$.first_column);
 	}
 	| expresionPostfix OPDECREMENTO {
-		$$ = $1 + $2;
+		$$ = new ExpresionPostDecremento($1, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -764,45 +706,42 @@ expresionListaArgumentos
 expresionPrimaria
 	: IDENTIFICADOR {
 		$$ = new Identificador($1, this._$.first_line, this._$.first_column);
-		/* $$ = $1; */
 	}
 	| CADENA {
 		$$ = new Valor(new Tipo(Types.STRING, false, null), $1, this._$.first_line, this._$.first_column);
 	}
 	| CARACTER {
 		$$ = new Valor(new Tipo(Types.CHAR, false, null), $1, this._$.first_line, this._$.first_column);
-		/* $$ = $1; */
 	}
 	| ENTERO {
 		$$ = new Valor(new Tipo(Types.INTEGER, false, null), $1, this._$.first_line, this._$.first_column);
-		/* $$ = Number($1); */
 	}
 	| DECIMAL {
 		$$ = new Valor(new Tipo(Types.DOUBLE, false, null), $1, this._$.first_line, this._$.first_column);
-		/* $$ = Number($1); */
 	}
 	| TRUE {
 		$$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 1, this._$.first_line, this._$.first_column);
-		/* $$ = $1 */
 	}
 	| FALSE {
 		$$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 0, this._$.first_line, this._$.first_column);
-		/* $$ = $1 */
 	}
 	| DOLAR IDENTIFICADOR {
-		$$ = $1 + $2;
+		$$ = new ParametroPorValor(null, $2, this._$.first_line, this._$.first_column);
 	}
-	| STRC IDENTIFICADOR { //new Estudiante (inicializador de estructuras)
-		$$ = $1 + $2;
+	| STRC IDENTIFICADOR PARIZQ PARDER { //strc Estudiante() (crea instancias de estructuras)
+		$$ = new InstanciaEstructura($2, this._$.first_line, this._$.first_column);
 	}
-	| STRC tipo { //new integer (inicializador de estructuras)
-		$$ = $1 + $2;
+	| STRC IDENTIFICADOR CORIZQ expresion CORDER  { //strc Estudiante[2] (crea ARREGLOS de estructuras)
+		$$ = new Arreglo(new Tipo(null, true, $2), $4, this._$.first_line, this._$.first_column);
+	}
+	| STRC tipo CORIZQ expresion CORDER { //strc integer (inicializador de ARREGLOS de primitivos)
+		$$ = new Arreglo(new Tipo($2, true, null), $4, this._$.first_line, this._$.first_column);
 	}
 	| NULL  {
 		$$ = new Valor(new Tipo(Types.NULL, false, null), 'null', this._$.first_line, this._$.first_column);
 	}
 	| LLAVIZQ expresionListaArgumentos LLAVDER {
-		$$ = $2;
+		$$ = new ArregloExplicito($2, this._$.first_line, this._$.first_column);
 	}
 	| PARIZQ expresion PARDER {
 		$$ = $2

@@ -1,7 +1,16 @@
 var fs = require('fs');
 var parser = require('./grammar/jsharp.js');
 
-fs.readFile('./entrada2.txt', (err, data) => {
-    if (err) throw err;
-    parser.parse(data.toString());
+let tree;
+
+let data = fs.readFileSync('./entrada2.txt');
+
+tree = parser.parse(data.toString());
+
+console.log(tree);
+
+fs.writeFile('AST.json', JSON.stringify(tree), function (err) {
+    if (err) return console.log(err);
+    console.log('tree > AST.json');
 });
+
