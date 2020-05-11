@@ -72,6 +72,15 @@ class Tabla {
         return null;
     }
 
+    getFuncion(id) {
+        for (let i of this.funciones) {
+            if (i.id === id) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     agregarTemporal(temp) {
         if (this.tempStorage.indexOf(temp) == -1) {
             this.tempStorage.push(temp);

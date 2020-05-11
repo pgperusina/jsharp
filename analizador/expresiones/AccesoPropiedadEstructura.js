@@ -1,6 +1,7 @@
 const AST = require('../AST');
 const Excepcion = require('../Excepciones/Excepcion');
 const Identificador = require('./Identificador');
+const LlamadaFuncion = require('./LlamadaFuncion');
 
 class AccesoPropiedadEstructura extends AST {
     expresion = null;
@@ -21,33 +22,24 @@ class AccesoPropiedadEstructura extends AST {
             arbol.errores.push(excepcion);
             return excepcion;
         }
-        const propiedadesEstructura = estructura.propiedades;
-        for (const propiedad of         propiedadesEstructura) {
-            if (propiedad.id.toLowerCase() == this.propiedad.id.toLowerCase()) {
-                return propiedad.tipo;
+        if (!(this.propiedad instanceof LlamadaFuncion)) {
+            const propiedadesEstructura = estructura.propiedades;
+            for (const propiedad of propiedadesEstructura) {
+                if (propiedad.id.toLowerCase() == this.propiedad.id.toLowerCase()) {
+                    return propiedad.tipo;
+                }
             }
+        }
+        if (this.propiedad instanceof LlamadaFuncion) {
+            const tipoFuncion = this.propiedad.validar(tabla, arbol);
+            if (tipoFuncion instanceof Excepcion) {
+                return tipoFuncion;
+            }
+            return tipoFuncion;
         }
         const excepcion = new Excepcion("Semántico", `La propiedad '${this.propiedad.id}' no está definida en la estructura '${estructura.id}'.`, this.propiedad.fila, this.propiedad.columna);
         arbol.errores.push(excepcion);
         return excepcion;
-
-        //     const tipoIzquierdo = this.izquierdo.validar(tabla, arbol);
-    //     if (tipoIzquierdo instanceof Excepcion) {
-    //         return tipoIzquierdo;
-    //     }
-    //     const tipoDerecho = this.derecho.validar(tabla,arbol);
-    //     if (tipoDerecho instanceof Excepcion) {
-    //         return tipoDerecho;
-    //     }
-    //     // TODO - validar que no se pueda asignar nuevo valor a una constante
-    //
-    //     if (tipoIzquierdo.toString() == tipoDerecho.toString()) {
-    //         return tipoIzquierdo;
-    //     } else {
-    //         const excepcion = new Excepcion("Semántico", `Error de asignación. Los tipos ${tipoIzquierdo.toString()} y ${tipoDerecho.toString()} no son compatibles.`, this.fila, this.columna);
-    //         arbol.errores.push(excepcion);
-    //         return excepcion;
-    //     }
      }
 }
 module.exports = AccesoPropiedadEstructura;

@@ -688,17 +688,14 @@ expresionPostfix
 	/* | expresionPostfix CORIZQ CORDER {
 		$$ = $1 + $2 + $3;
 	} */
-	| expresionPostfix PARIZQ PARDER {
+	/*| expresionPostfix PARIZQ PARDER {
 		$$ = new LlamadaFuncion($1, [], this._$.first_line, this._$.first_column);
-	}
-	| expresionPostfix PARIZQ expresionListaArgumentos PARDER {
+	}*/
+	/*| expresionPostfix PARIZQ expresionListaArgumentos PARDER {
 		$$ = new LlamadaFuncion($1, $3, this._$.first_line, this._$.first_column);
-	}
-	| expresionPostfix PUNTO IDENTIFICADOR PARIZQ expresionListaArgumentos PARDER {
-    		$$ = new LlamadaFuncion($1, $3, this._$.first_line, this._$.first_column);
-    	}
-	| expresionPostfix PUNTO IDENTIFICADOR {
-		$$ = new AccesoPropiedadEstructura($1, new Identificador($3, @3.first_line, @3.first_column), this._$.first_line, this._$.first_column);
+	}*/
+	| expresionPostfix PUNTO expresionPrimaria {
+		$$ = new AccesoPropiedadEstructura($1, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionPostfix OPINCREMENTO {
 		$$ = new ExpresionPostIncremento($1, this._$.first_line, this._$.first_column);
@@ -752,6 +749,12 @@ expresionPrimaria
 	| STRC tipo CORIZQ expresion CORDER { //strc integer (inicializador de ARREGLOS de primitivos)
 		$$ = new Arreglo(new Tipo($2, true, null), $4, @2.first_line, @2.first_column);
 	}
+	| IDENTIFICADOR PARIZQ PARDER {
+    		$$ = new LlamadaFuncion($1, [], this._$.first_line, this._$.first_column);
+    }
+    | IDENTIFICADOR PARIZQ expresionListaArgumentos PARDER {
+            $$ = new LlamadaFuncion($1, $3, this._$.first_line, this._$.first_column);
+    }
 	| NULL  {
 		$$ = new Valor(new Tipo(Types.NULL, false, null), 'null', this._$.first_line, this._$.first_column);
 	}

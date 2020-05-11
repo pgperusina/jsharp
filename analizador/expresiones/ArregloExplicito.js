@@ -19,16 +19,19 @@ class ArregloExplicito extends AST {
            }
         });
         for(var i = 0; i < this.listaValores.length - 1; i++) {
-            if(this.listaValores[i].tipo.toString() !== this.listaValores[i+1].tipo.toString()) {
+            let tipoTmp = tabla.getVariable(this.listaValores[i].id).tipo;
+            let tipoTmp2 = tabla.getVariable(this.listaValores[i+1].id).tipo;
+            if(tipoTmp.toString() !== tipoTmp2.toString()) {
                 tiposIguales = false;
             }
         }
         if (!tiposIguales) {
-            const excepcion = new Excepcion("Semántico", `Los tipos de los elementos del arreglo no son iguales. Definir un mismo tipo para todos los elementos..`, this.fila, this.columna);
+            const excepcion = new Excepcion("Semántico", `Los tipos de los elementos del arreglo no son iguales. Definir un mismo tipo para todos los elementos.`, this.fila, this.columna);
             arbol.errores.push(excepcion);
             return excepcion;
         }
-        return new Tipo(this.listaValores[0].tipo.tipo, true, null);
+        const tipoValores = tabla.getVariable(this.listaValores[0].id);
+        return new Tipo(tipoValores, true, null);
     }
 }
 module.exports = ArregloExplicito;
