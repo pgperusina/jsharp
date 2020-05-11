@@ -7,6 +7,8 @@
 **/
 %{
 	const Arbol = require('../analizador/Arbol');
+	const errores = [];
+	const Excepcion = require('../analizador/Excepciones/Excepcion');
 
 	const Import = require('../analizador/instrucciones/Import');
 	const Declaracion  = require('../analizador/instrucciones/Declaracion');
@@ -25,6 +27,7 @@
 
 
 	const Valor = require('../analizador/expresiones/Valor');
+	const Cadena = require('../analizador/expresiones/Cadena');
 	const Identificador = require('../analizador/expresiones/Identificador');
 	const Parametro = require('../analizador/expresiones/Parametro');
 	const Caso = require('../analizador/expresiones/Caso');
@@ -70,11 +73,11 @@
 
 /* Comments */
 "//".*                             	 	{
-                                            console.log("comment one line");
+                                            //console.log("comment one line");
                                             //console.log(yytext);
                                         }
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]     {
-                                            console.log("comment ML");
+                                            //console.log("comment ML");
                                             //console.log(yytext);
                                         }
 
@@ -157,6 +160,9 @@
 
 <<EOF>>                     return 'EOF';
 .                           { 
+								let error =  new Excepcion("Léxico", 'Caracter no aceptado: [' + yytext + ']', yylloc.first_line, yylloc.first_column);
+								errores.push(error);
+								console.log(error.toString());
 								console.error('Error Léxico: ' + yytext + 
 								', en la linea: ' + yylloc.first_line + ', y la columna: ' + yylloc.first_column); 
 							}
@@ -183,7 +189,11 @@
 %% /* Grammar definition */
 
 initial
-	: instrucciones EOF {return new Arbol($1); }
+	: instrucciones EOF {
+		arbol = new Arbol($1);
+		arbol.errores = errores;
+		return arbol;
+	}
 ;
 
 instrucciones
@@ -264,6 +274,8 @@ instruccion
 		//console.log("EXPRESION |||| " + JSON.stringify($$, null, 2));
 	}
 	| error {
+			let error =  new Excepcion("Sintáctico", 'Caracter no esperado: [' + yytext + ']', this._$.first_line, this._$.first_column);
+			errores.push(error);
 			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' 
 			+ this._$.first_column);
 			//". Se esperaba [" + JSON.stringify($1) + "]."); 
@@ -297,13 +309,13 @@ declaraciones
 		$$ = new Declaracion($1, null, $2, null, this._$.first_line, this._$.first_column);
 	}
 	| calificadorTipo IDENTIFICADOR DPIGUAL expresion {  // declaracion tipo 2, 3 y 4 - incluye estructuras en expresion (strc)
-		$$ = new Declaracion(null, $1, $2, $4, this._$.first_line, this._$.first_column);
+		$$ = new Declaracion(new Tipo("", false, null), $1, [$2], $4, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR listaIds IGUAL expresion {  // declaracion estructuras
-		$$ = new Declaracion(new Tipo(null, false, $1), null, $2, $4, this._$.first_line, this._$.first_column);
+		$$ = new Declaracion(new Tipo("", false, $1), null, $2, $4, this._$.first_line, this._$.first_column);
 	} 
-	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR IGUAL expresion {  // declaracion arreglos de estructuras
-		$$ = new Declaracion(new Tipo(null, true, $1), null, $4, $6, this._$.first_line, this._$.first_column);
+	| IDENTIFICADOR CORIZQ CORDER listaIds IGUAL expresion {  // declaracion arreglos de estructuras
+		$$ = new Declaracion(new Tipo("", true, $1), null, $4, $6, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -374,19 +386,19 @@ definicionFuncion
 		$$ = new Funcion($1, $2, $4, $6, this._$.first_line, this._$.first_column);
 	}
 	| definicionTipo IDENTIFICADOR PARIZQ  PARDER bloqueInstrucciones {
-		$$ = new Funcion($1, $2, null, $5, this._$.first_line, this._$.first_column);
+		$$ = new Funcion($1, $2, [], $5, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
-		$$ = new Funcion(new Tipo(null, false, $1), $2, $4, $6, this._$.first_line, this._$.first_column);
+		$$ = new Funcion(new Tipo("", false, $1), $2, $4, $6, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR IDENTIFICADOR PARIZQ  PARDER bloqueInstrucciones {
-		$$ = new Funcion(new Tipo(null, false, $1), $2, null, $5, this._$.first_line, this._$.first_column);
+		$$ = new Funcion(new Tipo("", false, $1), $2, [], $5, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR PARIZQ listaParametros PARDER bloqueInstrucciones {
-		$$ = new Funcion(new Tipo(null, true, $1), $4, $6, $8, this._$.first_line, this._$.first_column);
+		$$ = new Funcion(new Tipo("", true, $1), $4, $6, $8, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR PARIZQ PARDER bloqueInstrucciones {
-		$$ = new Funcion(new Tipo(null, true, $1), $4, null, $7, this._$.first_line, this._$.first_column);
+		$$ = new Funcion(new Tipo("", true, $1), $4, [], $7, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -408,13 +420,13 @@ parametro
 		$$ = new Parametro($1, $2, $4, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR IDENTIFICADOR {
-		$$ = new Parametro(new Tipo(null, false, $1), $2, null, this._$.first_line, this._$.first_column);
+		$$ = new Parametro(new Tipo("", false, $1), $2, null, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR IDENTIFICADOR IGUAL expresion {
-		$$ = new Parametro(new Tipo(null, false, $1), $2, $4, this._$.first_line, this._$.first_column);
+		$$ = new Parametro(new Tipo("", false, $1), $2, $4, this._$.first_line, this._$.first_column);
 	}
 	| IDENTIFICADOR CORIZQ CORDER IDENTIFICADOR {
-		$$ = new Parametro(new Tipo(null, true, $1), $4, null, this._$.first_line, this._$.first_column);
+		$$ = new Parametro(new Tipo("", true, $1), $4, null, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -515,7 +527,7 @@ continue
 
 return
 	: RETURN expresion {
-		$$ = new Return($1, this._$.first_line, this._$.first_column);
+		$$ = new Return($2, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -601,16 +613,16 @@ expresionRelacional
 		$$ = $1;
 	}
 	| expresionRelacional MAYOR expresionAditiva {
-		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
+		$$ = new ExpresionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionRelacional MAYORIGUAL expresionAditiva {
-		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
+		$$ = new ExpresionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionRelacional MENOR expresionAditiva {
-		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
+		$$ = new ExpresionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 	| expresionRelacional MENORIGUAL expresionAditiva {
-		$$ = new ExprsionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
+		$$ = new ExpresionRelacional($1, $2, $3, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -671,7 +683,7 @@ expresionPostfix
 		$$ = $1;
 	}
 	| expresionPostfix CORIZQ expresion CORDER {
-		$$ = new AccesoArreglo($1, $3, this._$.first_line, this._$.first_column);
+		$$ = new AccesoArreglo($1, $3, @1.first_line, @1.first_column);
 	}
 	/* | expresionPostfix CORIZQ CORDER {
 		$$ = $1 + $2 + $3;
@@ -682,8 +694,11 @@ expresionPostfix
 	| expresionPostfix PARIZQ expresionListaArgumentos PARDER {
 		$$ = new LlamadaFuncion($1, $3, this._$.first_line, this._$.first_column);
 	}
+	| expresionPostfix PUNTO IDENTIFICADOR PARIZQ expresionListaArgumentos PARDER {
+    		$$ = new LlamadaFuncion($1, $3, this._$.first_line, this._$.first_column);
+    	}
 	| expresionPostfix PUNTO IDENTIFICADOR {
-		$$ = new AccesoPropiedadEstructura($1, $3, this._$.first_line, this._$.first_column);
+		$$ = new AccesoPropiedadEstructura($1, new Identificador($3, @3.first_line, @3.first_column), this._$.first_line, this._$.first_column);
 	}
 	| expresionPostfix OPINCREMENTO {
 		$$ = new ExpresionPostIncremento($1, this._$.first_line, this._$.first_column);
@@ -708,7 +723,7 @@ expresionPrimaria
 		$$ = new Identificador($1, this._$.first_line, this._$.first_column);
 	}
 	| CADENA {
-		$$ = new Valor(new Tipo(Types.STRING, false, null), $1, this._$.first_line, this._$.first_column);
+		$$ = new Cadena(new Tipo(Types.STRING, false, null), $1, new Arreglo(new Tipo(Types.STRING, true, null), this._$.first_line, this._$.first_column), this._$.first_line, this._$.first_column);
 	}
 	| CARACTER {
 		$$ = new Valor(new Tipo(Types.CHAR, false, null), $1, this._$.first_line, this._$.first_column);
@@ -726,22 +741,22 @@ expresionPrimaria
 		$$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 0, this._$.first_line, this._$.first_column);
 	}
 	| DOLAR IDENTIFICADOR {
-		$$ = new ParametroPorValor(null, $2, this._$.first_line, this._$.first_column);
+		$$ = new ParametroPorValor(new Tipo("", false, null), $2, this._$.first_line, this._$.first_column);
 	}
 	| STRC IDENTIFICADOR PARIZQ PARDER { //strc Estudiante() (crea instancias de estructuras)
 		$$ = new InstanciaEstructura($2, this._$.first_line, this._$.first_column);
 	}
 	| STRC IDENTIFICADOR CORIZQ expresion CORDER  { //strc Estudiante[2] (crea ARREGLOS de estructuras)
-		$$ = new Arreglo(new Tipo(null, true, $2), $4, this._$.first_line, this._$.first_column);
+		$$ = new Arreglo(new Tipo("", true, $2), $4, @2.first_line, @2.first_column);
 	}
 	| STRC tipo CORIZQ expresion CORDER { //strc integer (inicializador de ARREGLOS de primitivos)
-		$$ = new Arreglo(new Tipo($2, true, null), $4, this._$.first_line, this._$.first_column);
+		$$ = new Arreglo(new Tipo($2, true, null), $4, @2.first_line, @2.first_column);
 	}
 	| NULL  {
 		$$ = new Valor(new Tipo(Types.NULL, false, null), 'null', this._$.first_line, this._$.first_column);
 	}
 	| LLAVIZQ expresionListaArgumentos LLAVDER {
-		$$ = new ArregloExplicito($2, this._$.first_line, this._$.first_column);
+		$$ = new ArregloExplicito($2, @2.first_line, @2.first_column);
 	}
 	| PARIZQ expresion PARDER {
 		$$ = $2

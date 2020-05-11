@@ -1,51 +1,109 @@
-class Simbolo {
-    id = '';
-    tipo = null;
-    valor = null;
-    fila = 0;
-    columna = 0;
-
-    constructor(id, tipo, valor, fila, columna) {
-        this.id = id;
-        this.tipo = tipo;
-        this.valor = valor;
-        this.fila = fila;
-        this.columna = columna;
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getTipo() {
-        return this.tipo;
-    }
-
-    getValor() {
-        return this.valor;
-    }
-
-    setTipo(tipo) {
-        this.tipo = tipo;
-    }
-
-    setValor(valor) {
-        this.valor = valor;
-    }
-
-    setFila(fila) {
-        this.fila = fila;
-    }
-
-    setColumna(columna) {
-        this.columna = columna;
-    }
-}
-
+const Simbolo = require('./Simbolo');
+const SimboloFuncion = require('./SimboloFuncion');
+const Excepcion = require('../Excepciones/Excepcion');
 
 class Tabla {
+    variables = [];
+    funciones = [];
+    temporal = 0;
+    etiqueta = 0;
+    heap = 0;
+    stack = 0;
+    local = false;
+    nombreAmbito = "";
+    currentSize = [];
+    listaEstructuras = [];
+
+
+    getVariable(id) {
+        for (let s of this.variables) {
+            if (s.id.toLowerCase() === id.toLowerCase()) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    setVariable(simbolo) {
+        for (let s of this.variables) {
+            if (s.id.toLowerCase() === simbolo.id.toLowerCase()) {
+                return new Excepcion("Semántico", `La variable '${simbolo.id}' ya está definida.`, simbolo.fila, simbolo.columna);
+            }
+        }
+        this.variables.push(simbolo);
+        return null;
+    }
+
+    getTemporal() {
+        return "t" + ++this.temporal;
+    }
+
+    getTemporalActual() {
+        return "t" + this.temporal;
+    }
+
+    getHeap() {
+        return this.heap++;  //retorna memoria dinámica y aumenta una posición
+    }
+
+    getStack() {
+        return this.stack++;  //retorna memoria local y aumenta una posición
+    }
+
+    setStack(valor) {
+        this.stack = valor; //cambia el valor del stack
+    }
+
+    getEtiqueta() {
+        return "L" + ++this.etiqueta;
+    }
+
+    getEtiquetaActual() {
+        return "L" + this.etiqueta;
+    }
+
+    setFuncion(simbolo) {
+        for (let s of this.funciones) {
+            if (s.id.toLowerCase() === simbolo.id.toLowerCase()) {
+                return new Excepcion("Semántico", `La función '${s.id}' ya está definida.`, simbolo.fila, simbolo.columna);
+            }
+        }
+        this.funciones.push(simbolo);
+        return null;
+    }
+
+    agregarTemporal(temp) {
+        if (this.tempStorage.indexOf(temp) == -1) {
+            this.tempStorage.push(temp);
+        }
+    }
+
+    quitarTemporal(temp) {
+        let index = this.tempStorage.indexOf(temp);
+        if (index > -1) {
+            this.tempStorage.splice(index, 1);
+        }
+    }
+
+    agregarEstructura(estructura) {
+        for (let e of this.listaEstructuras) {
+            if (e.id.toLowerCase() === estructura.id.toLowerCase()) {
+                return new Excepcion("Semántico", `La estructura '${e.id}' ya está definida.`, e.fila, e.columna);
+            }
+        }
+        this.listaEstructuras.push(estructura);
+        return null;
+    }
+
+    getEstructura(idEstructura) {
+        for (let e of this.listaEstructuras) {
+            if (e.id.toLowerCase() === idEstructura.toLowerCase()) {
+                return e;
+            }
+        }
+        return null;
+    }
 
 }
 
-module.exports = Simbolo;
 module.exports = Tabla;

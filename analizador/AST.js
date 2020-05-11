@@ -10,7 +10,7 @@ class AST {
         return null;
     }
 
-    validarTipos(tabla, arbol) {
+    validar(tabla, arbol) {
         return null;
     }
 }

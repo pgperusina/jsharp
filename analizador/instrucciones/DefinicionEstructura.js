@@ -9,5 +9,6 @@ class DefinicionEstructura extends AST {
         this.id = id;
         this.propiedades = propiedades;
     }
+
 }
 module.exports = DefinicionEstructura;

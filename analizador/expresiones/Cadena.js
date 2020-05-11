@@ -1,12 +1,13 @@
 
 const AST = require('../AST');
-class Valor extends AST {
-
+class Cadena extends AST {
     valor = null;
+    arreglo = null
 
-    constructor(tipo, valor, fila, columna) {
+    constructor(tipo, valor, arreglo, fila, columna) {
         super(tipo, fila, columna);
         this.valor = valor;
+        this.arreglo = arreglo;
     }
 
     validar(tabla, arbol) {
@@ -14,11 +15,11 @@ class Valor extends AST {
     }
 
     getC3D(tabla, arbol) {
-        const temporal = tabla.getTemporal();  //t1
-        let c3d = `${temporal} = ${this.valor} \n`;  // t1 = 1
+        const temporal = tabla.getTemporal();
+        let c3d = `${temporal} = ${this.valor} \n`;
         tabla.AgregarTemporal(tabla.getTemporalActual());
         return c3d;
     }
 }
 
-module.exports = Valor;
+module.exports = Cadena;

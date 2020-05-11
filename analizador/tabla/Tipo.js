@@ -1,17 +1,17 @@
 const Types = {
-    INTEGER: 'integer',
-    DOUBLE: 'double',
-    CHAR: 'char',
-    BOOLEAN: 'boolean',
-    VOID: 'void',
-    NULL: 'null',
-    STRING: 'string'
+    INTEGER: 'INTEGER',
+    DOUBLE: 'DOUBLE',
+    CHAR: 'CHAR',
+    BOOLEAN: 'BOOLEAN',
+    VOID: 'VOID',
+    NULL: 'NULL',
+    STRING: 'STRING'
 }
 
 class Tipo {
     tipo = null;
     esArreglo = false;
-    nombreStruct = null;
+    nombreStruct = "";
 
     constructor(tipo, esArreglo, nombreStruct) {
         this.tipo = tipo;
@@ -21,15 +21,15 @@ class Tipo {
 
     toString() {
         if (!this.esArreglo) {
-            if (this.nombreStruct != null) {
-                return 'struct_' + Types[this.tipo].toLowerCase();
+            if (this.nombreStruct != null ) {
+                return this.nombreStruct.toLowerCase();
             }
             return Types[this.tipo].toLowerCase();
         } else {
-            if (this.nombreStruct != null) {
-                return 'array_struct_' + Types[this.tipo].toLowerCase();
+            if (this.nombreStruct != null ) {
+                return "array_" + this.nombreStruct.toLowerCase();
             }
-            return 'arreglo_' + Types[this.tipo].toLowerCase();
+            return 'array_' + Types[this.tipo].toLowerCase();
         }
     }
 }

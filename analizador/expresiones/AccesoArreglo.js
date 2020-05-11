@@ -9,5 +9,9 @@ class AccesoArreglo extends AST {
         this.expresion = expresion;
         this.posicion = posicion;
     }
+
+    validar(tabla, arbol) {
+        const tipoExpresion = tabla.getVariable(this.expresion.id);
+    }
 }
 module.exports = AccesoArreglo;
