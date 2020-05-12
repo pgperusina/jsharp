@@ -20,7 +20,7 @@ class ExpresionCasteo extends AST {
             return tipoExpresion;
         }
         if (this.tipoCasteo.toLowerCase() == "integer") {
-            if (tipoExpresion.toString() == "double") {
+            if (tipoExpresion.toString().toLowerCase() == "double") {
                 this.tipo = new Tipo(Types.INTEGER, false, null);
                 return this.tipo;
             } else {

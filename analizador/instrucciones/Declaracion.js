@@ -21,7 +21,7 @@ class Declaracion extends AST {
         if (this.calificadorTipo === null) {
             for (const i of this.id) {
                 let result = tabla.getVariable(i);
-                if (result !== null) {
+                if (result != null) {
                     const excepcion = new Excepcion("Semántico", `La variable '${this.id}' ya ha sido definida`, this.fila, this.columna);
                     arbol.errores.push(excepcion);
                     return excepcion;
@@ -46,7 +46,15 @@ class Declaracion extends AST {
             if (this.calificadorTipo !== null) {
                 this.tipo = tipo;  // declaracion 2,3,4 se infiere el tipo de la variable vía el valor
             } else {
-                if (tipo.toString() !== this.tipo.toString()) {
+                let t = this.tipo.toString().toLowerCase();
+                if (t.includes("array")) {
+                    t = t.split("_")[1];
+                }
+                let t2 = tipo.toString().toLowerCase();
+                if (t2.includes("array")) {
+                    t2 = t2.split("_")[1];
+                }
+                if (t2 !== t) {
                     const excepcion = new Excepcion("Semántico", `El tipo de la variable '${this.id}' no es igual al tipo de su valor [${this.tipo.toString()} -- ${tipo.toString()}].`, this.fila, this.columna);
                     arbol.errores.push(excepcion);
                     return excepcion;

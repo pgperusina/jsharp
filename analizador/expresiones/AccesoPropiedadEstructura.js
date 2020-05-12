@@ -2,6 +2,8 @@ const AST = require('../AST');
 const Excepcion = require('../Excepciones/Excepcion');
 const Identificador = require('./Identificador');
 const LlamadaFuncion = require('./LlamadaFuncion');
+const Types = require('../tabla/Tipo').Types;
+const Tipo = require('../tabla/Tipo').Tipo;
 
 class AccesoPropiedadEstructura extends AST {
     expresion = null;
@@ -15,7 +17,27 @@ class AccesoPropiedadEstructura extends AST {
 
     validar(tabla, arbol) {
         const tipoExpresion = this.expresion.validar(tabla, arbol);
-
+        if (tipoExpresion instanceof Excepcion) {
+            return tipoExpresion;
+        }
+        if (tipoExpresion.nombreStruct == null && tipoExpresion.esArreglo == false) {
+            const excepcion = new Excepcion("Semántico", `La variable '${this.expresion.id}' no es de tipo estructura, por lo tanto no tiene propiedades definidas.`, this.fila, this.columna);
+            arbol.errores.push(excepcion);
+            return excepcion;
+        }
+        if (tipoExpresion.esArreglo) {
+            if (this.propiedad.id.toLowerCase() != "length") {
+                const excepcion = new Excepcion("Semántico", `El único atributo por defecto de un arreglo es 'length'.`, this.fila, this.columna);
+                arbol.errores.push(excepcion);
+                return excepcion;
+            } else {
+                return new Tipo(Types.INTEGER, false, null);
+            }
+            const result = this.propiedad.validar(tabla,arbol);
+            if (result instanceof Excepcion) {
+                return result;
+            }
+        }
         const estructura = tabla.getEstructura(tipoExpresion.nombreStruct);
         if (estructura == null) {
             const excepcion = new Excepcion("Semántico", `La variable '${this.expresion.id}' no tiene como tipo una estructura, por lo tanto no tiene atributos definidos.`, this.fila, this.columna);

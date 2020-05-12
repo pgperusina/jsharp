@@ -162,9 +162,9 @@
 .                           { 
 								let error =  new Excepcion("Léxico", 'Caracter no aceptado: [' + yytext + ']', yylloc.first_line, yylloc.first_column);
 								errores.push(error);
-								console.log(error.toString());
-								console.error('Error Léxico: ' + yytext + 
-								', en la linea: ' + yylloc.first_line + ', y la columna: ' + yylloc.first_column); 
+								//console.log(error.toString());
+								//console.error('Error Léxico: ' + yytext +
+								//', en la linea: ' + yylloc.first_line + ', y la columna: ' + yylloc.first_column);
 							}
 							
 /lex
@@ -276,8 +276,8 @@ instruccion
 	| error {
 			let error =  new Excepcion("Sintáctico", 'Caracter no esperado: [' + yytext + ']', this._$.first_line, this._$.first_column);
 			errores.push(error);
-			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' 
-			+ this._$.first_column);
+			//console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: '
+			//+ this._$.first_column);
 			//". Se esperaba [" + JSON.stringify($1) + "]."); 
 			//$$ = "ERROR"
 	}
@@ -370,7 +370,7 @@ calificadorTipo
 
 asignacionArreglo
 	: IDENTIFICADOR CORIZQ expresion CORDER IGUAL expresion {
-		$$ = new AsignacionArreglo($1, $3, $6, this._$.first_line, this._$.first_column);
+		$$ = new AsignacionArreglo(new Identificador($1, @1.first_line, @1.first_column), $3, $6, this._$.first_line, this._$.first_column);
 	}
 ;
 
@@ -726,10 +726,10 @@ expresionPrimaria
 		$$ = new Valor(new Tipo(Types.CHAR, false, null), $1, this._$.first_line, this._$.first_column);
 	}
 	| ENTERO {
-		$$ = new Valor(new Tipo(Types.INTEGER, false, null), $1, this._$.first_line, this._$.first_column);
+		$$ = new Valor(new Tipo(Types.INTEGER, false, null), new Number($1), this._$.first_line, this._$.first_column);
 	}
 	| DECIMAL {
-		$$ = new Valor(new Tipo(Types.DOUBLE, false, null), $1, this._$.first_line, this._$.first_column);
+		$$ = new Valor(new Tipo(Types.DOUBLE, false, null), new Number($1), this._$.first_line, this._$.first_column);
 	}
 	| TRUE {
 		$$ = new Valor(new Tipo(Types.BOOLEAN, false, null), 1, this._$.first_line, this._$.first_column);

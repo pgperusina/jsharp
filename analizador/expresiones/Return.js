@@ -1,4 +1,6 @@
 const AST = require('../AST');
+const Excepcion = require('../Excepciones/Excepcion');
+
 
 class Return extends AST {
     expresion = null;
@@ -9,7 +11,7 @@ class Return extends AST {
     }
 
     validar(tabla, arbol) {
-        const result = this.expresion.valida(tabla, arbol);
+        const result = this.expresion.validar(tabla, arbol);
         if (result instanceof Excepcion) {
             return result;
         }

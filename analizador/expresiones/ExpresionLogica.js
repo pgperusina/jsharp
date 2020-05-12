@@ -23,7 +23,7 @@ class ExpresionLogica extends AST {
         if (tipoDerecho instanceof Excepcion) {
             return tipoDerecho;
         }
-        if (tipoIzquierdo.toString() == "boolean" && tipoDerecho.toString() == "boolean") {
+        if (tipoIzquierdo.toString().toLowerCase() == "boolean" && tipoDerecho.toString().toLowerCase() == "boolean") {
             this.tipo = new Tipo(Types.BOOLEAN, false, null);
             return this.tipo;
         } else {

@@ -1,4 +1,6 @@
 const AST = require('../AST');
+const Excepcion = require('../Excepciones/Excepcion');
+const Tabla = require('../tabla/Tabla');
 
 class While extends AST {
     condicion = null;
@@ -9,6 +11,25 @@ class While extends AST {
         this.condicion = condicion;
         this.listaInstrucciones = listaInstrucciones;
 
+    }
+
+    validar(t, arbol) {
+        const tabla = new Tabla();
+        tabla.anterior = t;
+        tabla.listaEstructuras = t.listaEstructuras;
+
+        let result = this.condicion.validar(tabla, arbol);
+        if (result instanceof Excepcion) {
+            return result;
+        }
+
+        this.listaInstrucciones.map(m => {
+            let result = m.validar(tabla, arbol);
+            if (result instanceof Excepcion) {
+                return result;
+            }
+        });
+        return null;
     }
 }
 module.exports = While;

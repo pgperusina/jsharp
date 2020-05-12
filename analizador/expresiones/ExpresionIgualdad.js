@@ -25,17 +25,17 @@ class ExpresionIgualdad extends AST {
             return tipoDerecho;
         }
         if (this.operador === "==" || this.operador == "!=") {
-            if (tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "char" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "char" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "char" ||
-                tipoIzquierdo.toString() == "string" && tipoDerecho.toString() == "string" ||
-                tipoIzquierdo.toString() == "boolean" && tipoDerecho.toString() == "boolean") {
+            if (tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "char" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "char" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "char" ||
+                tipoIzquierdo.toString().toLowerCase() == "string" && tipoDerecho.toString().toLowerCase() == "string" ||
+                tipoIzquierdo.toString().toLowerCase() == "boolean" && tipoDerecho.toString().toLowerCase() == "boolean") {
                 this.tipo = new Tipo(Types.BOOLEAN, false, null);
                 return this.tipo;
             } else {
@@ -44,7 +44,7 @@ class ExpresionIgualdad extends AST {
                 return excepcion;
             }
         } else if (this.operador === "===") {
-            if (tipoIzquierdo.toString() == "string" && tipoDerecho.toString() == "string" ||
+            if (tipoIzquierdo.toString().toLowerCase() == "string" && tipoDerecho.toString().toLowerCase() == "string" ||
                 tipoIzquierdo.esArreglo && tipoDerecho.esArreglo) {
                 this.tipo = new Tipo(Types.BOOLEAN, false, null);
                 return this.tipo;

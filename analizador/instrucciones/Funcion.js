@@ -1,4 +1,5 @@
 const AST = require('../AST');
+const Tabla = require('../tabla/Tabla');
 
 class Funcion extends AST {
     tipo = null;
@@ -14,12 +15,15 @@ class Funcion extends AST {
         this.bloqueInstrucciones = bloqueInstrucciones;
     }
 
-    validar(tabla, arbol) {
+    validar(t, arbol) {
+        const tabla = new Tabla();
+        tabla.anterior = t;
+        tabla.listaEstructuras = t.listaEstructuras;
         this.listaParametros.map(m => {
             m.validar(tabla, arbol);
         });
 
-        this.instrucciones.map(m => {
+        this.bloqueInstrucciones.map(m => {
             m.validar(tabla, arbol);
         });
     }

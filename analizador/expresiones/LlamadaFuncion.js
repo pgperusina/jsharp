@@ -12,6 +12,7 @@ class LlamadaFuncion extends AST {
     }
 
     validar(tabla, arbol) {
+
         this.nombreFuncion = this.id + '_';
         this.listaArgumentos.map(argumento => {
            const tipoArgumento = argumento.validar(tabla, arbol);

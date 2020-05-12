@@ -1,4 +1,6 @@
 const AST = require('../AST');
+const Excepcion = require('../Excepciones/Excepcion');
+const Simbolo = require('../tabla/Simbolo');
 
 class Parametro extends AST {
     id = null;

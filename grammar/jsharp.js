@@ -195,8 +195,8 @@ case 21:
 
 			let error =  new Excepcion("Sintáctico", 'Caracter no esperado: [' + yytext + ']', this._$.first_line, this._$.first_column);
 			errores.push(error);
-			console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' 
-			+ this._$.first_column);
+			//console.error('Error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: '
+			//+ this._$.first_column);
 			//". Se esperaba [" + JSON.stringify($$[$0]) + "]."); 
 			//this.$ = "ERROR"
 	
@@ -300,7 +300,7 @@ case 41:
 break;
 case 42:
 
-		this.$ = new AsignacionArreglo($$[$0-5], $$[$0-3], $$[$0], this._$.first_line, this._$.first_column);
+		this.$ = new AsignacionArreglo(new Identificador($$[$0-5], _$[$0-5].first_line, _$[$0-5].first_column), $$[$0-3], $$[$0], this._$.first_line, this._$.first_column);
 	
 break;
 case 43:
@@ -538,12 +538,12 @@ case 121:
 break;
 case 122:
 
-		this.$ = new Valor(new Tipo(Types.INTEGER, false, null), $$[$0], this._$.first_line, this._$.first_column);
+		this.$ = new Valor(new Tipo(Types.INTEGER, false, null), new Number($$[$0]), this._$.first_line, this._$.first_column);
 	
 break;
 case 123:
 
-		this.$ = new Valor(new Tipo(Types.DOUBLE, false, null), $$[$0], this._$.first_line, this._$.first_column);
+		this.$ = new Valor(new Tipo(Types.DOUBLE, false, null), new Number($$[$0]), this._$.first_line, this._$.first_column);
 	
 break;
 case 124:
@@ -1394,9 +1394,9 @@ break;
 case 74: 
 								let error =  new Excepcion("Léxico", 'Caracter no aceptado: [' + yy_.yytext + ']', yy_.yylloc.first_line, yy_.yylloc.first_column);
 								errores.push(error);
-								console.log(error.toString());
-								console.error('Error Léxico: ' + yy_.yytext + 
-								', en la linea: ' + yy_.yylloc.first_line + ', y la columna: ' + yy_.yylloc.first_column); 
+								//console.log(error.toString());
+								//console.error('Error Léxico: ' + yy_.yytext +
+								//', en la linea: ' + yy_.yylloc.first_line + ', y la columna: ' + yy_.yylloc.first_column);
 							
 break;
 }

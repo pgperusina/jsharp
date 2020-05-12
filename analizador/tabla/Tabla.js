@@ -13,25 +13,64 @@ class Tabla {
     nombreAmbito = "";
     currentSize = [];
     listaEstructuras = [];
-
+    anterior = null;
 
     getVariable(id) {
-        for (let s of this.variables) {
-            if (s.id.toLowerCase() === id.toLowerCase()) {
-                return s;
+        for (let e = this; e != null; e = e.getAnterior()) {
+            for (let s of e.variables) {
+                if (s.id.toLowerCase() === id.toLowerCase()) {
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
+    // getVariable(id) {
+    //     for (let s of this.variables) {
+    //         if (s.id.toLowerCase() === id.toLowerCase()) {
+    //             return s;
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    setVariable(simbolo) {
+        for (let e = this; e != null; e = e.getAnterior()) {
+            for (let s of e.variables) {
+                if (s.id.toLowerCase() === simbolo.id.toLowerCase()) {
+                    return new Excepcion("Semántico", `La variable '${simbolo.id}' ya está definida.`, simbolo.fila, simbolo.columna);
+                }
+            }
+        }
+        this.variables.push(simbolo);
+        return null;
+    }
+    // setVariable(simbolo) {
+    //     for (let s of this.variables) {
+    //         if (s.id.toLowerCase() === simbolo.id.toLowerCase()) {
+    //             return new Excepcion("Semántico", `La variable '${simbolo.id}' ya está definida.`, simbolo.fila, simbolo.columna);
+    //         }
+    //     }
+    //     this.variables.push(simbolo);
+    //     return null;
+    // }
+
+    setVariableGlobal(simbolo) {
+        for (let e = this; e != null; e = e.getAnterior()) {
+            if (e.getAnterior() == null) {
+                for (let s of e.variables) {
+                    if (s.id.toLowerCase() === simbolo.id.toLowerCase()) {
+                        return new Excepcion("Semántico", `La variable global '${simbolo.id}' ya está definida.`, simbolo.fila, simbolo.columna);
+                    }
+                }
+                e.variables.push(simbolo);
             }
         }
         return null;
     }
 
-    setVariable(simbolo) {
-        for (let s of this.variables) {
-            if (s.id.toLowerCase() === simbolo.id.toLowerCase()) {
-                return new Excepcion("Semántico", `La variable '${simbolo.id}' ya está definida.`, simbolo.fila, simbolo.columna);
-            }
-        }
-        this.variables.push(simbolo);
-        return null;
+    getAnterior() {
+        return this.anterior;
     }
 
     getTemporal() {
@@ -73,9 +112,11 @@ class Tabla {
     }
 
     getFuncion(id) {
-        for (let i of this.funciones) {
-            if (i.id === id) {
-                return i;
+        for (let e = this; e != null; e = e.getAnterior()) {
+            for (let i of e.funciones) {
+                if (i.id === id) {
+                    return i;
+                }
             }
         }
         return null;

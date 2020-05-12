@@ -1,6 +1,8 @@
 const AST = require('../AST');
 const Tipo = require('../tabla/Tipo').Tipo;
 const Excepcion = require('../Excepciones/Excepcion');
+const Valor = require('../expresiones/Valor');
+const Identificador = require('../expresiones/Identificador');
 
 class ArregloExplicito extends AST {
     listaValores = [];
@@ -19,10 +21,20 @@ class ArregloExplicito extends AST {
            }
         });
         for(var i = 0; i < this.listaValores.length - 1; i++) {
-            let tipoTmp = tabla.getVariable(this.listaValores[i].id).tipo;
-            let tipoTmp2 = tabla.getVariable(this.listaValores[i+1].id).tipo;
-            if(tipoTmp.toString() !== tipoTmp2.toString()) {
-                tiposIguales = false;
+            if (this.listaValores[i] instanceof Valor) {
+                let tipoTmp = this.listaValores[i].tipo;
+                let tipoTmp2 =this.listaValores[i + 1].tipo;
+                if (tipoTmp.toString() !== tipoTmp2.toString()) {
+                    tiposIguales = false;
+                }
+                this.tipo = tipoTmp;
+            } else if (this.listaValores[i] instanceof Identificador) {
+                let tipoTmp = tabla.getVariable(this.listaValores[i].id).tipo;
+                let tipoTmp2 = tabla.getVariable(this.listaValores[i + 1].id).tipo;
+                if (tipoTmp.toString() !== tipoTmp2.toString()) {
+                    tiposIguales = false;
+                }
+                this.tipo = tipoTmp;
             }
         }
         if (!tiposIguales) {
@@ -30,8 +42,7 @@ class ArregloExplicito extends AST {
             arbol.errores.push(excepcion);
             return excepcion;
         }
-        const tipoValores = tabla.getVariable(this.listaValores[0].id);
-        return new Tipo(tipoValores, true, null);
+        return new Tipo(this.tipo.tipo, true, null);
     }
 }
 module.exports = ArregloExplicito;

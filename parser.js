@@ -46,6 +46,21 @@ if (arbol.errores.length === 0) {
 
     // TODO - VALIDAR QUE NO VENGAN RETURNS, CONTINUE, BREAKS U OTRAS INSTRUCCIONES NO ACEPTADAS
 
+    // recorro los imports para obtener funciones
+    let arbolImports;
+    imports.map(imp => {
+        imp.archivos.map(a => {
+            let data = fs.readFileSync('./imports/'+a);
+            arbolImports = parser.parse(data.toString());
+            //obteniendo funciones
+            arbolImports.instrucciones.map(m => {
+                if (m instanceof Funcion) {
+                    tabla.setStack(0);
+                    addFuncion(tabla, arbol, m);
+                }
+            });
+        })
+    });
     //obteniendo funciones
     arbol.instrucciones.map(m => {
        if (m instanceof Funcion) {
@@ -76,7 +91,23 @@ if (arbol.errores.length === 0) {
        m.validar(tabla, arbol);
     });
 
-    console.log(JSON.stringify(tabla, null, 2));
+    let c3d = '';
+    if (arbol.errores.length == 0) {
+        /**
+         * Reservo espacio para cada global
+         */
+        for (let i = 0; i < conteoGlobales; i++) {
+            c3d += `heap[${i}] = 0\n`;
+            c3d += `h = h + 1\n`
+        }
+
+        arbol.instrucciones.map(m => {
+            c3d += m.getC3D(tabla, arbol);
+        });
+        console.log(c3d);
+    }
+
+  //  console.log(JSON.stringify(tabla, null, 2));
 
     if (arbol.errores.length > 0 ) {
         arbol.errores.map(e => {

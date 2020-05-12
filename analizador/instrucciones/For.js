@@ -1,4 +1,6 @@
 const AST = require('../AST');
+const Excepcion = require('../Excepciones/Excepcion');
+const Tabla = require('../tabla/Tabla');
 
 class For extends AST {
     inicio = null;
@@ -13,6 +15,40 @@ class For extends AST {
         this.final = final;
         this.listaInstrucciones = listaInstrucciones;
 
+    }
+
+    validar(t, arbol) {
+        const tabla = new Tabla();
+        tabla.anterior = t;
+        tabla.listaEstructuras = t.listaEstructuras;
+        if (this.inicio != null) {
+            let result = this.inicio.validar(tabla, arbol);
+            if (result instanceof Excepcion) {
+                return result;
+            }
+        }
+
+        if (this.condicion != null) {
+            let result = this.condicion.validar(tabla, arbol);
+            if (result instanceof Excepcion) {
+                return result;
+            }
+        }
+
+        if (this.final != null) {
+            let result = this.final.validar(tabla, arbol);
+            if (result instanceof Excepcion) {
+                return result;
+            }
+        }
+
+        this.listaInstrucciones.map(m => {
+            let result = m.validar(tabla, arbol);
+            if (result instanceof Excepcion) {
+                return result;
+            }
+        });
+        return null;
     }
 }
 module.exports = For;

@@ -20,6 +20,7 @@ class Tipo {
     }
 
     toString() {
+        //return Types[this.tipo].toLowerCase();
         if (!this.esArreglo) {
             if (this.nombreStruct != null ) {
                 return this.nombreStruct.toLowerCase();

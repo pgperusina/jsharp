@@ -24,15 +24,15 @@ class ExpresionRelacional extends AST {
         if (tipoDerecho instanceof Excepcion) {
             return tipoDerecho;
         }
-        if (tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "integer" ||
-            tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "double" ||
-            tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "char" ||
-            tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "integer" ||
-            tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "char" ||
-            tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "double" ||
-            tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "integer" ||
-            tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "double" ||
-            tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "char") {
+        if (tipoIzquierdo.toString().toLowerCase().includes("integer") && tipoDerecho.toString().toLowerCase().includes("integer") ||
+            tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "double" ||
+            tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "char" ||
+            tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "integer" ||
+            tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "char" ||
+            tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "double" ||
+            tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "integer" ||
+            tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "double" ||
+            tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "char") {
             this.tipo = new Tipo(Types.BOOLEAN, false, null);
             return this.tipo;
         } else {

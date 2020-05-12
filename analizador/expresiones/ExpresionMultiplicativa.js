@@ -26,17 +26,17 @@ class ExpresionMultiplicativa extends AST {
         }
 
         if (this.operador === "*") {
-            if (tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "char" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "char") {
+            if (tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "char" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "char") {
                 this.tipo = new Tipo(Types.INTEGER, false, null);
                 return this.tipo;
-            } else if (tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "char" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "double") {
+            } else if (tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "char" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "double") {
                 this.tipo = new Tipo(Types.DOUBLE, false, null);
                 return this.tipo;
             } else {
@@ -45,15 +45,15 @@ class ExpresionMultiplicativa extends AST {
                 return excepcion;
             }
         } else if (this.operador === "/") {
-            if (tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "char" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "integer" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "char" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "double" && tipoDerecho.toString() == "double" ||
-                tipoIzquierdo.toString() == "char" && tipoDerecho.toString() == "char") {
+            if (tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "char" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "integer" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "char" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "double" && tipoDerecho.toString().toLowerCase() == "double" ||
+                tipoIzquierdo.toString().toLowerCase() == "char" && tipoDerecho.toString().toLowerCase() == "char") {
                 this.tipo = new Tipo(Types.DOUBLE, false, null);
                 return this.tipo;
             } else {
@@ -62,7 +62,7 @@ class ExpresionMultiplicativa extends AST {
                 return excepcion;
             }
         } else if (this.operador === "%") {
-            if (tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "integer") {
+            if (tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "integer") {
                 this.tipo = new Tipo(Types.INTEGER, false, null);
                 return this.tipo;
             } else {
