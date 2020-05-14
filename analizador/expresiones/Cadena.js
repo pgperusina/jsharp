@@ -14,7 +14,7 @@ class Cadena extends AST {
         return this.tipo;
     }
 
-    getC3D(tabla, arbol) {
+    generarC3d(tabla, arbol) {
         const temporal = tabla.getTemporal();
         let c3d = `${temporal} = ${this.valor} \n`;
         tabla.AgregarTemporal(tabla.getTemporalActual());

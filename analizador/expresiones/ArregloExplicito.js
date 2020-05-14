@@ -24,15 +24,17 @@ class ArregloExplicito extends AST {
             if (this.listaValores[i] instanceof Valor) {
                 let tipoTmp = this.listaValores[i].tipo;
                 let tipoTmp2 =this.listaValores[i + 1].tipo;
-                if (tipoTmp.toString() !== tipoTmp2.toString()) {
+                if (tipoTmp.toString().toLowerCase() !== tipoTmp2.toString().toLowerCase()) {
                     tiposIguales = false;
+                    break;
                 }
                 this.tipo = tipoTmp;
             } else if (this.listaValores[i] instanceof Identificador) {
                 let tipoTmp = tabla.getVariable(this.listaValores[i].id).tipo;
                 let tipoTmp2 = tabla.getVariable(this.listaValores[i + 1].id).tipo;
-                if (tipoTmp.toString() !== tipoTmp2.toString()) {
+                if (tipoTmp.toString().toLowerCase() !== tipoTmp2.toString().toLowerCase()) {
                     tiposIguales = false;
+                    break;
                 }
                 this.tipo = tipoTmp;
             }

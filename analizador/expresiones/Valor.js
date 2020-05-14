@@ -13,7 +13,7 @@ class Valor extends AST {
         return this.tipo;
     }
 
-    getC3D(tabla, arbol) {
+    generarC3D(tabla, arbol) {
         const temporal = tabla.getTemporal();  //t1
         let c3d = `${temporal} = ${this.valor} \n`;  // t1 = 1
         tabla.AgregarTemporal(tabla.getTemporalActual());

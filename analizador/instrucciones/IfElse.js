@@ -16,6 +16,7 @@ class IfElse extends AST {
 
     validar(t, arbol) {
         const tabla = new Tabla();
+        const tabla2 = new Tabla();
         tabla.anterior = t;
         tabla.listaEstructuras = t.listaEstructuras;
 
@@ -30,8 +31,11 @@ class IfElse extends AST {
                 return result;
             }
         });
+
+        tabla2.anterior = t;
+        tabla2.listaEstructuras = t.listaEstructuras;
         this.bloqueInstruccionesFalse.map(m => {
-            let result = m.validar(tabla, arbol);
+            let result = m.validar(tabla2, arbol);
             if (result instanceof Excepcion) {
                 return result;
             }

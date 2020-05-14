@@ -26,7 +26,7 @@ class ExpresionPotencia extends AST {
         }
 
        if (this.operador === "^^") {
-            if (tipoIzquierdo.toString() == "integer" && tipoDerecho.toString() == "integer") {
+            if (tipoIzquierdo.toString().toLowerCase() == "integer" && tipoDerecho.toString().toLowerCase() == "integer") {
                 this.tipo = new Tipo(Types.INTEGER, false, null);
                 return this.tipo;
             } else {

@@ -433,13 +433,13 @@ parametro
 //CONTROL DE FLUJO
 if
 	: IF PARIZQ expresion PARDER bloqueInstrucciones { 
-		$$ = new If($3, $5, this._$.first_line, this._$.first_column);
+		$$ = new If($3, $5, @3.first_line, @3.first_column);
 		}
 	| IF PARIZQ expresion PARDER bloqueInstrucciones ELSE  if { 
-		$$ = new IfElseIf($3, $5, $7, this._$.first_line, this._$.first_column);
+		$$ = new IfElseIf($3, $5, $7, @3.first_line, @3.first_column);
 		}
 	| IF PARIZQ expresion PARDER bloqueInstrucciones ELSE bloqueInstrucciones { 
-		$$ = new IfElse($3, $5, $7, this._$.first_line, this._$.first_column);
+		$$ = new IfElse($3, $5, $7, @3.first_line, @3.first_column);
 		}
 ;
 
@@ -682,9 +682,9 @@ expresionPostfix
 	: expresionPrimaria {
 		$$ = $1;
 	}
-	| expresionPostfix CORIZQ expresion CORDER {
+	/*| expresionPostfix CORIZQ expresion CORDER {
 		$$ = new AccesoArreglo($1, $3, @1.first_line, @1.first_column);
-	}
+	}*/
 	/* | expresionPostfix CORIZQ CORDER {
 		$$ = $1 + $2 + $3;
 	} */
@@ -720,7 +720,7 @@ expresionPrimaria
 		$$ = new Identificador($1, this._$.first_line, this._$.first_column);
 	}
 	| CADENA {
-		$$ = new Cadena(new Tipo(Types.STRING, false, null), $1, new Arreglo(new Tipo(Types.STRING, true, null), this._$.first_line, this._$.first_column), this._$.first_line, this._$.first_column);
+		$$ = new Cadena(new Tipo(Types.STRING, false, null), $1, new Arreglo(new Tipo(Types.STRING, true, null), new Valor(new Tipo(Types.INTEGER, false, null), $1.length, this._$.first_line, this._$.first_column), this._$.first_line, this._$.first_column), this._$.first_line, this._$.first_column);
 	}
 	| CARACTER {
 		$$ = new Valor(new Tipo(Types.CHAR, false, null), $1, this._$.first_line, this._$.first_column);
@@ -755,6 +755,9 @@ expresionPrimaria
     | IDENTIFICADOR PARIZQ expresionListaArgumentos PARDER {
             $$ = new LlamadaFuncion($1, $3, this._$.first_line, this._$.first_column);
     }
+    | IDENTIFICADOR CORIZQ expresion CORDER {
+    		$$ = new AccesoArreglo(new Identificador($1, this._$.first_line, this._$.first_column), $3, @1.first_line, @1.first_column);
+    	}
 	| NULL  {
 		$$ = new Valor(new Tipo(Types.NULL, false, null), 'null', this._$.first_line, this._$.first_column);
 	}

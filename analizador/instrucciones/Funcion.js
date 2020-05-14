@@ -1,15 +1,16 @@
 const AST = require('../AST');
 const Tabla = require('../tabla/Tabla');
+const Return = require('../expresiones/Return');
+const Excepcion = require('../Excepciones/Excepcion');
+
 
 class Funcion extends AST {
-    tipo = null;
     nombre = "";
-    listParametros = [];
+    listaParametros = [];
     bloqueInstrucciones = [];
 
     constructor(tipo, nombre, listaParametros, bloqueInstrucciones, fila, columna) {
         super(tipo, fila, columna);
-        this.tipo = tipo;
         this.nombre = this.buildNombreFuncion(nombre, listaParametros);
         this.listaParametros = listaParametros;
         this.bloqueInstrucciones = bloqueInstrucciones;
@@ -23,15 +24,26 @@ class Funcion extends AST {
             m.validar(tabla, arbol);
         });
 
+        let tipoReturn = null;
         this.bloqueInstrucciones.map(m => {
+            if (m instanceof Return) {
+                tipoReturn = m.validar(tabla,arbol);
+            }
             m.validar(tabla, arbol);
         });
+        if(tipoReturn != null) {
+            if (this.tipo.toString().toLowerCase() != tipoReturn) {
+                const excepcion = new Excepcion("Semántico", `El tipo de la función '${this.tipo.toString()}' no coincide con el tipo del Return '${tipoReturn.toString()}'.`, this.fila, this.columna);
+                arbol.errores.push(excepcion);
+                return excepcion;
+            }
+        }
     }
 
     buildNombreFuncion(nombre, listaParametros) {
         const tiposParametros = [];
         listaParametros.map(m => {
-            tiposParametros.push(m.tipo.toString());
+            tiposParametros.push(m.tipo.toString().toLowerCase());
         });
         return tiposParametros.length == 0 ?
             `${nombre}` :

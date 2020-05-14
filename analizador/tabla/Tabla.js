@@ -14,6 +14,7 @@ class Tabla {
     currentSize = [];
     listaEstructuras = [];
     anterior = null;
+    listaTemporales = [];
 
     getVariable(id) {
         for (let e = this; e != null; e = e.getAnterior()) {
@@ -114,7 +115,7 @@ class Tabla {
     getFuncion(id) {
         for (let e = this; e != null; e = e.getAnterior()) {
             for (let i of e.funciones) {
-                if (i.id === id) {
+                if (i.id.toLowerCase() === id.toLowerCase()) {
                     return i;
                 }
             }
@@ -123,15 +124,15 @@ class Tabla {
     }
 
     agregarTemporal(temp) {
-        if (this.tempStorage.indexOf(temp) == -1) {
-            this.tempStorage.push(temp);
+        if (this.listaTemporales.indexOf(temp) == -1) {
+            this.listaTemporales.push(temp);
         }
     }
 
     quitarTemporal(temp) {
-        let index = this.tempStorage.indexOf(temp);
+        let index = this.listaTemporales.indexOf(temp);
         if (index > -1) {
-            this.tempStorage.splice(index, 1);
+            this.listaTemporales.splice(index, 1);
         }
     }
 

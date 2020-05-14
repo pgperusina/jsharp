@@ -17,7 +17,7 @@ class ExpresionPostIncremento extends AST {
         }
 
         if (this.expresion instanceof Identificador) {
-            if (tipo.toString() == 'integer' || tipo.toString() == 'double') {
+            if (tipo.toString().toLowerCase() == 'integer' || tipo.toString().toLowerCase() == 'double') {
                 this.tipo = tipo;
                 return this.tipo;
             } else {

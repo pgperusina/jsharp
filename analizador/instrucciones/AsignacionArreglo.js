@@ -1,5 +1,7 @@
 const AST = require('../AST');
 const Excepcion = require('../Excepciones/Excepcion');
+const Tipo = require('../tabla/Tipo').Tipo;
+
 
 class AsignacionArreglo extends AST {
     id = null;
@@ -26,12 +28,19 @@ class AsignacionArreglo extends AST {
         if (tipoPosicion instanceof Excepcion) {
             return tipoPosicion;
         }
-        if (tipoPosicion.toString() != "integer") {
+        if (tipoPosicion.toString().toLowerCase() != "integer") {
             const excepcion = new Excepcion("Semántico", `El tipo de la posición del arreglo debe de ser integer.`, this.fila, this.columna);
             arbol.errores.push(excepcion);
             return excepcion;
         }
-        return null;
+        this.tipo = new Tipo(tipoArreglo.tipo, false, tipoArreglo.nombreStruct);
+        if (this.tipo.toString().toLowerCase() != tipoValor.toString().toLowerCase()) {
+            const excepcion = new Excepcion("Semántico", `El tipo del arreglo y el valor a asignar no coinciden - '${tipoArreglo.toString()}' - '${tipoValor.toString()}'.`, this.fila, this.columna);
+            arbol.errores.push(excepcion);
+            return excepcion;
+        }
+        this.tipo = new Tipo(tipoArreglo.tipo, false, tipoArreglo.nombreStruct);
+        return this.tipo;
     }
 }
 module.exports = AsignacionArreglo;

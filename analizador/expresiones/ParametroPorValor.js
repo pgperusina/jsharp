@@ -1,4 +1,5 @@
 const AST = require('../AST');
+const Excepcion = require('../Excepciones/Excepcion');
 
 class ParametroPorValor extends AST {
     id = null;
@@ -23,14 +24,14 @@ class ParametroPorValor extends AST {
             if (tipo instanceof Excepcion) {
                 return tipo;
             }
-            if (tipo.toString() !== this.tipo.toString()) {
+            if (tipo.toString().toLowerCase() !== this.tipo.toString().toLowerCase()) {
                 const excepcion = new Excepcion("Semántico", `El tipo del parámetro no es igual al tipo del valor ${this.tipo.toString()} -- ${tipo.toString()}.`, this.fila, this.columna);
                 arbol.errores.push(excepcion);
                 return excepcion;
             }
         }
 
-        tabla.setVariable(new Simbolo(this.tipo, this.id,  "var", this.posicion, this.fila, this.columna));
+        tabla.setVariable(new Simbolo(this.tipo, this.id, this.posicion, this.fila, this.columna));
     }
 }
 module.exports = ParametroPorValor;

@@ -18,7 +18,8 @@ class InstanciaEstructura extends AST {
             arbol.errores.push(excepcion);
             return excepcion;
         }
-        return new Tipo("", false, this.idEstructura);
+        this.tipo = new Tipo("", false, this.idEstructura);
+        return this.tipo;
     }
 }
 module.exports = InstanciaEstructura;

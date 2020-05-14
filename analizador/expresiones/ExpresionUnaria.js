@@ -29,7 +29,7 @@ class ExpresionUnaria extends AST {
                 return excepcion;
             }
         } else if (this.operador === "!") {
-            if (tipo.toString() == 'boolean') {
+            if (tipo.toString().toLowerCase() == 'boolean') {
                 this.tipo = tipo;
                 return this.tipo;
             } else {

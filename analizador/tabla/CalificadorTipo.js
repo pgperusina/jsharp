@@ -10,10 +10,6 @@ class CalificadorTipo {
     constructor(calificadorTipo) {
         this.calificadorTipo = calificadorTipo;
     }
-
-    toString() {
-        return '' + Types[this.tipo].toLowerCase();
-    }
 }
 
 exports.CalificadorTipo = CalificadorTipo;

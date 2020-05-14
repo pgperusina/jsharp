@@ -27,7 +27,7 @@ class Parametro extends AST {
             if (tipo instanceof Excepcion) {
                 return tipo;
             }
-            if (tipo.toString() !== this.tipo.toString()) {
+            if (tipo.toString().toLowerCase() !== this.tipo.toString().toLowerCase()) {
                 const excepcion = new Excepcion("Semántico", `El tipo del parámetro no es igual al tipo del valor inicial ${this.tipo.toString()} -- ${tipo.toString()}.`, this.fila, this.columna);
                 arbol.errores.push(excepcion);
                 return excepcion;
@@ -35,9 +35,9 @@ class Parametro extends AST {
         }
 
         if (this.tipo.nombreStruct != null && this.tipo.nombreStruct.length > 0) {
-            tabla.setVariable(new Simbolo(this.tipo, this.id, "var", this.posicion, this.fila, this.columna));
+            tabla.setVariable(new Simbolo(this.tipo, this.id,  this.posicion, this.fila, this.columna));
         } else {
-            tabla.setVariable(new Simbolo(this.tipo, this.id,  "var", this.posicion, this.fila, this.columna));
+            tabla.setVariable(new Simbolo(this.tipo, this.id, this.posicion, this.fila, this.columna));
         }
     }
 

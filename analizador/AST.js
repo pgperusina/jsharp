@@ -6,7 +6,7 @@ class AST {
         this.columna = columna;
     }
 
-    getC3D(tabla, arbol) {
+    generarC3D(tabla, arbol) {
         return null;
     }
 

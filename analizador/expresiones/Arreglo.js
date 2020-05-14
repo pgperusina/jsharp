@@ -16,6 +16,11 @@ class Arreglo extends AST {
         if (result instanceof Excepcion) {
             return result;
         }
+        if (result.toString().toLowerCase() != "integer") {
+            const excepcion = new Excepcion("Semántico", `El tipo de la posición del arreglo debe de ser integer.`, this.tamano.fila, this.tamano.columna);
+            arbol.errores.push(excepcion);
+            return excepcion;
+        }
         return this.tipo;
     }
 }

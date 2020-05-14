@@ -24,13 +24,17 @@ class ExpresionAsignacion extends AST {
         }
         // TODO - validar que no se pueda asignar nuevo valor a una constante
 
-        if (tipoIzquierdo.toString() == tipoDerecho.toString()) {
+        if (tipoIzquierdo.toString().toLowerCase() == tipoDerecho.toString().toLowerCase()) {
             return tipoIzquierdo;
         } else {
             const excepcion = new Excepcion("Semántico", `Error de asignación. Los tipos ${tipoIzquierdo.toString()} y ${tipoDerecho.toString()} no son compatibles.`, this.fila, this.columna);
             arbol.errores.push(excepcion);
             return excepcion;
         }
+    }
+
+    generarC3D(tabla, arbol) {
+        return "ldkjflkasdj";
     }
 
 

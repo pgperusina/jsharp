@@ -29,10 +29,10 @@ class ExpresionCasteo extends AST {
                 return excepcion;
             }
         } else if (this.tipoCasteo.toLowerCase() == "char") {
-            if (tipoExpresion.toString() == "double") {
+            if (tipoExpresion.toString().toLowerCase() == "double") {
                 this.tipo = new Tipo(Types.CHAR, false, null);
                 return this.tipo;
-            } else if (tipoExpresion.toString() == "integer") {
+            } else if (tipoExpresion.toString().toLowerCase() == "integer") {
                 this.tipo = new Tipo(Types.CHAR, false, null);
                 return this.tipo;
             } else {

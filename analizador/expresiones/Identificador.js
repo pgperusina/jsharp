@@ -15,6 +15,7 @@ class Identificador extends AST {
             arbol.errores.push(excepcion);
             return excepcion;
         }
+        this.tipo = result.tipo;
         return result.tipo;
     }
 }

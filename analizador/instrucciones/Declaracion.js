@@ -64,11 +64,51 @@ class Declaracion extends AST {
 
         if (this.calificadorTipo === null) {  // declaracion tipo 1, 5, de estructuras y de arreglos de estructuras
             for (let i = 0; i < this.id.length; i++) {
-                tabla.setVariable(new Simbolo(this.tipo,this.id[i],"var", this.posicion[i], this.fila, this.columna));
+                tabla.setVariable(new Simbolo(this.tipo,this.id[i], this.posicion[i], this.fila, this.columna));
             }
         } else {  // declaracion tipo 2,3 y 4
-            tabla.setVariable(new Simbolo(this.tipo, this.id[0],  this.calificadorTipo.toLowerCase(), this.posicion[0], this.fila, this.columna));
+            tabla.setVariable(new Simbolo(this.tipo, this.id[0], this.posicion[0], this.fila, this.columna));
         }
+        return null;
     }
+
+    generarC3D(tabla, arbol) {
+        ///////////////////////////////////////////////////////
+        if (this.calificadorTipo === null) {  // declaracion tipo 1, 5, de estructuras y de arreglos de estructuras
+            for (let i = 0; i < this.id.length; i++) {
+                tabla.setVariable(new Simbolo(this.tipo,this.id[i], this.posicion[i], this.fila, this.columna));
+            }
+        } else {  // declaracion tipo 2,3 y 4
+            tabla.setVariable(new Simbolo(this.tipo, this.id[0], this.posicion[0], this.fila, this.columna));
+        }
+        ///////////////////////////////////////////////////////
+        let codigo = '';
+        let variable = tabla.getVariable(this.id);  // TODO - verificar si es declaración múltiple y generar código adecuado
+        if (this.valor != null) {
+            let valor3D = this.valor.generarC3D(tabla, arbol);
+            codigo += valor3D;
+            // Almacenamos la variable en la posicion que reservamos, con el valor recien obtenido
+            if (!tabla.ambito) {
+                codigo += `heap[${variable.posicion}] = ${tabla.getTemporalActual()}\n`;
+            } else {
+                let temp = tabla.getTemporalActual();
+                let temp2 = tabla.getTemporal();
+                ///codigo += `${temp} = ${tabla.getTemporalActual()}\n`;
+                codigo += `${temp2} = P\n`;  // t2 = P
+                codigo += `${temp2} = ${temp2} + ${variable.posicion}\n`;// t2 = t2 + 0; calculo posicion de variable en stack
+                codigo += `stack[${temp2}] = ${temp}\n`;   // stack[t2]  = t1;  guardo valor en stack
+            }
+            tabla.QuitarTemporal(tabla.getTemporalActual());
+        } else {
+            let temp = tabla.getTemporal();
+            if (['numeric', 'boolean'].includes(this.tipo.toString().toLowerCase())) {
+                codigo += `${temp} = 0\n`;
+            } else {
+                codigo += `${temp} = -1\n`;
+            }
+        }
+        return codigo;
+    }
+
 }
 module.exports = Declaracion;
