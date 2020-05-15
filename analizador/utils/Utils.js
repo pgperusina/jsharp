@@ -8,12 +8,13 @@ const Declaracion = require('../instrucciones/Declaracion');
 const SimboloFuncion = require('../tabla/SimboloFuncion');
 const Excepcion = require('../Excepciones/Excepcion');
 
+logsOff = true;
 
 function addFuncion(tabla, arbol, funcion) {
     const tipo = funcion.tipo;
     const identificador = funcion.nombre;
     const parametros = funcion.listaParametros.length;
-    tabla.setStack(1);
+    tabla.setStack(0);
     //seteo la posicion relativa para cada parámetro
     funcion.listaParametros.map(m => {
         m.posicion = tabla.getStack();
@@ -62,7 +63,7 @@ function addEstructura(tabla, arbol, estructura) {
     const id = estructura.id;
     const propiedades = estructura.propiedades.length;
     const nombresPropiedades = [];
-    tabla.setStack(1);
+    tabla.setStack(0);
     //seteo la posicion relativa para cada propiedad
     estructura.propiedades.map(p => {
         p.posicion = tabla.getStack();
@@ -78,6 +79,13 @@ function addEstructura(tabla, arbol, estructura) {
     tabla.listaEstructuras.push(estructura);
 }
 
+function logger(mensaje) {
+    if (!logsOff) {
+        console.log(mensaje);
+    }
+}
+
 exports.addFuncion = addFuncion;
 exports.getTamanoFuncion = getTamanoFuncion;
 exports.addEstructura = addEstructura;
+exports.logger = logger;

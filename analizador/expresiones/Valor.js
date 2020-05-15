@@ -16,7 +16,7 @@ class Valor extends AST {
     generarC3D(tabla, arbol) {
         const temporal = tabla.getTemporal();  //t1
         let c3d = `${temporal} = ${this.valor} \n`;  // t1 = 1
-        tabla.AgregarTemporal(tabla.getTemporalActual());
+        tabla.agregarTemporal(tabla.getTemporalActual());
         return c3d;
     }
 }

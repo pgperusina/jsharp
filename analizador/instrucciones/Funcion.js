@@ -40,6 +40,27 @@ class Funcion extends AST {
         }
     }
 
+    generarC3D(tabla, arbol) {
+        const funcionExiste = tabla.getFuncion(this.nombre);
+        tabla.currentSize.push(funcionExiste.tamanoFuncion);
+        tabla.ambito = true;
+        let codigo = `proc ${this.nombre} begin\n`;
+        this.bloqueInstrucciones.map(m => {
+            codigo += m.generarC3D(tabla, arbol);
+        });
+
+        tabla.listaReturn.map(m => {
+            codigo += `${m}:\n`
+        });
+        codigo += `end\n\n`
+        tabla.ambito = false;
+        tabla.listaReturn = [];
+        tabla.currentSize.pop();
+        tabla.listaTemporales = [];
+        return codigo;
+    }
+
+
     buildNombreFuncion(nombre, listaParametros) {
         const tiposParametros = [];
         listaParametros.map(m => {

@@ -52,7 +52,7 @@ if (arbol.errores.length === 0) {
         })
     });
 
-    let conteoGlobales = 0;
+    let declaracionesGlobales = [];
     arbol.instrucciones.map(m => {
         //Verificando que instrucciones no sean break, continue o return
         if (m instanceof Continue) {
@@ -80,11 +80,11 @@ if (arbol.errores.length === 0) {
             if (m.id instanceof Array) {  //si la declaracion incluye varios identificadores
                 m.id.map(i => {
                     m.posicion.push(tabla.getHeap());
-                    conteoGlobales++;
+                    declaracionesGlobales.push(m);
                 });
             } else {
                 m.posicion.push(tabla.getHeap());
-                conteoGlobales++;
+                declaracionesGlobales.push(m);
             }
 
         }
@@ -109,23 +109,41 @@ if (arbol.errores.length === 0) {
         /**
          * Reservo espacio para cada declaración global
          */
-        for (let i = 0; i < conteoGlobales; i++) {
-            c3d += `heap[${i}] = 0\n`;  //todo - colocar valor default dependiendo del tipo
-            c3d += `h = h + 1\n`
-        }
+        // declaracionesGlobales.map(global => {
+        //
+        // });
+        //   //  c3d += `heap[${i}] = 0;\n`;  //todo - colocar valor default dependiendo del tipo
+        //   //  c3d += `h = h + 1;\n`
+        // }
+
         //Verifico si existe función principal
         const principal = tabla.getFuncion("principal")
         if (principal == null) {
             const excepcion = new Excepcion("Semántico", `No existe la función 'Principal'.`, 0, 0);
             arbol.errores.push(excepcion);
         }
+        // llamo a principal desde el inicio, para evitar problemas de ejecución
+        c3d += `call principal;\n`;
         /**
          * GENERO C3D
          */
         arbol.instrucciones.map(m => {
-           // c3d += m.generarC3D(tabla, arbol);
+            c3d += m.generarC3D(tabla, arbol);
         });
+
+        /**
+         * Finalizo el C3D (agregando lista de temporales en encabeado
+         * y colocando etiquetas necesarias para evitar que se parsee la sábana de C3D)
+         */
+        let etiquetas = finalizarC3D(tabla, arbol);
+        c3d = etiquetas + c3d;
+        c3d += "L200:\n";
+
         console.log(c3d);
+        fs.writeFile('C3D.j', c3d, function (err) {
+            if (err) return console.log(err);
+            console.log('c3d > C3D.j');
+        });
     }
 
   //  console.log(JSON.stringify(tabla, null, 2));
@@ -145,10 +163,18 @@ if (arbol.errores.length === 0) {
 }
 
 function inicializarC3D(tabla, arbol) {
-    let c3d = "var P,H;\n";
-    c3d += "var Heap[];\n";
-    c3d += "var Stack[];\n";
-    c3d += `var ${tabla.getTemporalActual()};\n`;
-    c3d += `call principal;\n`;
+    let c3d = "var p=0;\n";
+    c3d += "var h=0;\n";
+    c3d += "var heap[];\n";
+    c3d += "var stack[];\n";
+    return c3d;
+}
+
+function finalizarC3D(tabla, arbol) {
+    let c3d = "var t0";
+    for (let i = 1; i <= tabla.temporal ; i++) {
+        c3d += `,t${i}`;
+    }
+    c3d += ";\n";
     return c3d;
 }

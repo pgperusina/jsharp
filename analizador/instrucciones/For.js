@@ -1,6 +1,8 @@
 const AST = require('../AST');
 const Excepcion = require('../Excepciones/Excepcion');
 const Tabla = require('../tabla/Tabla');
+const Return = require('../expresiones/Return');
+
 
 class For extends AST {
     inicio = null;

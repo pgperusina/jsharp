@@ -15,6 +15,7 @@ class Tabla {
     listaEstructuras = [];
     anterior = null;
     listaTemporales = [];
+    listaReturn = [];
 
     getVariable(id) {
         for (let e = this; e != null; e = e.getAnterior()) {

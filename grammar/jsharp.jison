@@ -496,6 +496,9 @@ inicio
 	: declaraciones PCOMA { 
 		$$ = $1;
 	}
+	| IDENTIFICADOR IGUAL expresion PCOMA {
+     		$$ = new ExpresionAsignacion(new Identificador($1, @1.first_line, @1.first_column), $3, this._$.first_line, this._$.first_column);
+    }
 	| PCOMA { $$ = null; }
 ;
 
@@ -539,7 +542,7 @@ print
 
 trycatch
 	: TRY bloqueInstrucciones CATCH PARIZQ IDENTIFICADOR IDENTIFICADOR PARDER bloqueInstrucciones {
-		$$ = new TryCatch($2, $5, $6, $8, this._$.first_line, this._$.first_column);
+		$$ = new TryCatch($2, $5, new Identificador($6, @6.first_line, @6.first_column), $8, this._$.first_line, this._$.first_column);
 	}
 ;
 

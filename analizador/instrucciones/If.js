@@ -1,6 +1,7 @@
 const AST = require('../AST');
 const Excepcion = require('../Excepciones/Excepcion');
 const Tabla = require('../tabla/Tabla');
+const Continue = require('../expresiones/Continue');
 
 class If extends AST {
     condicion = null;
@@ -20,6 +21,11 @@ class If extends AST {
         let result = this.condicion.validar(tabla, arbol);
         if (result instanceof Excepcion) {
             return result;
+        }
+        if (result.toString().toLowerCase() != "boolean") {
+            const excepcion = new Excepcion("Semántico", `La expresión de la instrucción If debe de ser de tipo Boolean.`, this.condicion.fila, this.condicion.columna);
+            arbol.errores.push(excepcion);
+            return excepcion;
         }
 
         this.bloqueInstrucciones.map(m => {

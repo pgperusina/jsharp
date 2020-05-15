@@ -22,6 +22,11 @@ class DoWhile extends AST {
         if (result instanceof Excepcion) {
             return result;
         }
+        if (result.toString().toLowerCase() != "boolean") {
+            const excepcion = new Excepcion("Semántico", `La expresión de la instrucción Do While debe de ser de tipo Boolean.`, this.condicion.fila, this.condicion.columna);
+            arbol.errores.push(excepcion);
+            return excepcion;
+        }
 
         this.listaInstrucciones.map(m => {
             let result = m.validar(tabla, arbol);

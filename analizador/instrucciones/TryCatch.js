@@ -1,6 +1,9 @@
 const AST = require('../AST');
 const Excepcion = require('../Excepciones/Excepcion');
+const DefinicionEstructura = require('../instrucciones/DefinicionEstructura');
+const Simbolo = require('../tabla/Simbolo');
 const Tabla = require('../tabla/Tabla');
+const Tipo = require('../tabla/Tipo').Tipo;
 
 class TryCatch extends AST {
     bloqueInstrucciones = [];
@@ -16,8 +19,14 @@ class TryCatch extends AST {
         this.bloqueInstruccionesCatch = bloqueInstruccionesCatch;
     }
 
-    validar(tabla, arbol) {
-        // TODO - Agregar el resto de excepciones
+    validar(t, arbol) {
+        const tabla = new Tabla();
+        const tabla2 = new Tabla();
+        tabla.anterior = t;
+        tabla.listaEstructuras = t.listaEstructuras;
+        tabla2.anterior = t;
+        tabla2.listaEstructuras = t.listaEstructuras;
+        // TODO - Agregar el resto de excepciones AGREGARLAS GLOBALMENTE!!!!!!!
         tabla.listaEstructuras.push(new DefinicionEstructura("ArithmeticException", 0, 0));
         /**
          * Valido instrucciones catch
@@ -43,6 +52,19 @@ class TryCatch extends AST {
             arbol.errores.push(excepcion);
             return excepcion;
         }
+        const varId = tabla.setVariable(new Simbolo(new Tipo("", false, this.tipoExcepcion), this.idExcepcion.id, this.idExcepcion.fila, this.idExcepcion.columna));
+        if (varId instanceof Excepcion) {
+            return varId;
+        }
+
+        tabla2.anterior = t;
+        tabla2.listaEstructuras = t.listaEstructuras;
+        this.bloqueInstrucciones.map(m => {
+            let result = m.validar(tabla2, arbol);
+            if (result instanceof Excepcion) {
+                return result;
+            }
+        });
     }
 }
 module.exports = TryCatch;

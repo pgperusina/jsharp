@@ -74,41 +74,79 @@ class Declaracion extends AST {
 
     generarC3D(tabla, arbol) {
         ///////////////////////////////////////////////////////
-        if (this.calificadorTipo === null) {  // declaracion tipo 1, 5, de estructuras y de arreglos de estructuras
-            for (let i = 0; i < this.id.length; i++) {
-                tabla.setVariable(new Simbolo(this.tipo,this.id[i], this.posicion[i], this.fila, this.columna));
-            }
-        } else {  // declaracion tipo 2,3 y 4
-            tabla.setVariable(new Simbolo(this.tipo, this.id[0], this.posicion[0], this.fila, this.columna));
-        }
+        // if (this.calificadorTipo === null) {  // declaracion tipo 1, 5, de estructuras y de arreglos de estructuras
+        //     for (let i = 0; i < this.id.length; i++) {
+        //         tabla.setVariable(new Simbolo(this.tipo,this.id[i], this.posicion[i], this.fila, this.columna));
+        //     }
+        // } else {  // declaracion tipo 2,3 y 4
+        //     tabla.setVariable(new Simbolo(this.tipo, this.id[0], this.posicion[0], this.fila, this.columna));
+        // }
         ///////////////////////////////////////////////////////
         let codigo = '';
-        let variable = tabla.getVariable(this.id);  // TODO - verificar si es declaración múltiple y generar código adecuado
-        if (this.valor != null) {
-            let valor3D = this.valor.generarC3D(tabla, arbol);
-            codigo += valor3D;
-            // Almacenamos la variable en la posicion que reservamos, con el valor recien obtenido
-            if (!tabla.ambito) {
-                codigo += `heap[${variable.posicion}] = ${tabla.getTemporalActual()}\n`;
-            } else {
-                let temp = tabla.getTemporalActual();
-                let temp2 = tabla.getTemporal();
-                ///codigo += `${temp} = ${tabla.getTemporalActual()}\n`;
-                codigo += `${temp2} = P\n`;  // t2 = P
-                codigo += `${temp2} = ${temp2} + ${variable.posicion}\n`;// t2 = t2 + 0; calculo posicion de variable en stack
-                codigo += `stack[${temp2}] = ${temp}\n`;   // stack[t2]  = t1;  guardo valor en stack
-            }
-            tabla.QuitarTemporal(tabla.getTemporalActual());
-        } else {
-            let temp = tabla.getTemporal();
-            if (['numeric', 'boolean'].includes(this.tipo.toString().toLowerCase())) {
-                codigo += `${temp} = 0\n`;
-            } else {
-                codigo += `${temp} = -1\n`;
-            }
+        let variable;
+        /**
+         * Si la declaración incluye una lista de ID's
+         */
+        if (this.id instanceof Array) {
+            let pos = 0;
+            this.id.map(v => {
+                variable = tabla.getVariable(v);
+                if (this.valor != null) {
+                    let valor3D = this.valor.generarC3D(tabla, arbol);
+                    codigo += valor3D;
+                    // Almacenamos la variable en la posicion que reservamos, con el valor recien obtenido
+                    if (!tabla.ambito) {
+                        // codigo += `heap[${this.posicion[pos]}] = ${tabla.getTemporalActual()};\n`;
+                        codigo += `heap[h] = ${tabla.getTemporalActual()};\n`;
+                        codigo += `h = h + 1;\n`;
+                    } else {
+                        let t1 = tabla.getTemporalActual();  // por ejemplo, el temporal que generó el nodo Valor t1;
+                        let t2 = tabla.getTemporal();  // t2;
+                        ///codigo += `${t1} = ${tabla.getTemporalActual()}\n`;
+                        // codigo += `${t2} = p;\n`;  // t2 = P
+                        codigo += `${t2} = p + ${this.posicion[pos++]};\n`;// t2 = t2 + 0; calculo posicion de variable en stack
+                        codigo += `stack[${t2}] = ${t1};\n`;   // stack[t2]  = t1;  guardo valor en stack
+                    }
+                    tabla.quitarTemporal(tabla.getTemporalActual());
+                } else {  // DECLARACION DE PRIMITIVOS, VERIFICAR SI ESTOY EN FUNCION O SI ESTOY EN GLOBAL
+                    if (!tabla.ambito) {
+                        if (this.tipo.toString().toLowerCase() == "integer") {
+                            codigo += `heap[h] = 0;\n`;
+                            codigo += `h = h + 1;\n`;
+                        } else
+                        if (this.tipo.toString().toLowerCase() == "double") {
+                            codigo += `heap[h] = 0.0;\n`;
+                            codigo += `h = h + 1;\n`;
+                        } else
+                        if (this.tipo.toString().toLowerCase() == "boolean") {
+                            codigo += `heap[h] = 0;\n`;
+                            codigo += `h = h + 1;\n`;
+                        } else
+                        if (this.tipo.toString().toLowerCase() == "char") {
+                            codigo += `heap[h] = ${'\0'.charCodeAt(0)};\n`;
+                            codigo += `h = h + 1;\n`;
+                        }
+                    } else {
+                        let t1 = tabla.getTemporal();  // t1;
+                        codigo += `${t1} = p + ${this.posicion[pos++]};\n`;  // t1 = p + posicionRelativa
+                        if (this.tipo.toString().toLowerCase() == "integer") {
+                            codigo += `stack[${t1}] = 0;\n`;   // stack[t1]  = valor default
+                        } else
+                        if (this.tipo.toString().toLowerCase() == "double") {
+                            codigo += `stack[${t1}] = 0.0;\n`;
+                        } else
+                        if (this.tipo.toString().toLowerCase() == "boolean") {
+                            codigo += `stack[${t1}] = 0;\n`;
+                        } else
+                        if (this.tipo.toString().toLowerCase() == "char") {
+                            codigo += `stack[${t1}] = ${'\0'.charCodeAt(0)};\n`;
+                        }
+                    }
+                }
+            });
         }
+        codigo += `\n`;
         return codigo;
     }
-
 }
 module.exports = Declaracion;
