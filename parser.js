@@ -53,6 +53,10 @@ if (arbol.errores.length === 0) {
     });
 
     let declaracionesGlobales = [];
+    let heapCounter = 0;
+    /**
+     * Verificando tipos de instrucciones y guardando funciones, estructuras y declaraciones globales
+     */
     arbol.instrucciones.map(m => {
         //Verificando que instrucciones no sean break, continue o return
         if (m instanceof Continue) {
@@ -77,16 +81,10 @@ if (arbol.errores.length === 0) {
         }
         // Obteniendo declaraciones para pedir espacio en heap
         if (m instanceof Declaracion) {
-            if (m.id instanceof Array) {  //si la declaracion incluye varios identificadores
-                m.id.map(i => {
-                    m.posicion.push(tabla.getHeap());
-                    declaracionesGlobales.push(m);
-                });
-            } else {
-                m.posicion.push(tabla.getHeap());
+            m.id.map(i => {
+                m.posicion.push(heapCounter++);
                 declaracionesGlobales.push(m);
-            }
-
+            });
         }
     });
 
@@ -98,6 +96,22 @@ if (arbol.errores.length === 0) {
     });
 
     /**
+     * Validando tipos de funciones importadas
+     */
+    tabla.funciones.map(f => {
+        const result = f.funcion.validar(tabla, arbol);
+        // if (result instanceof Excepcion) {
+        //     arbol.errores.push(excepcion);
+        // }
+    });
+
+    //Verifico si existe función principal
+    const principal = tabla.getFuncion("principal")
+    if (principal == null) {
+        const excepcion = new Excepcion("Semántico", `No existe la función 'Principal'.`, 0, 0);
+        arbol.errores.push(excepcion);
+    }
+    /**
      * Generando C3D
      */
     let c3d = '';
@@ -105,35 +119,37 @@ if (arbol.errores.length === 0) {
         /**
          * Inicializo el C3D (encabezado)
          */
-        c3d = inicializarC3D(tabla, arbol);
-        /**
-         * Reservo espacio para cada declaración global
-         */
-        // declaracionesGlobales.map(global => {
-        //
-        // });
-        //   //  c3d += `heap[${i}] = 0;\n`;  //todo - colocar valor default dependiendo del tipo
-        //   //  c3d += `h = h + 1;\n`
-        // }
+        c3d = inicializarC3D(tabla, arbol, declaracionesGlobales);
 
-        //Verifico si existe función principal
-        const principal = tabla.getFuncion("principal")
-        if (principal == null) {
-            const excepcion = new Excepcion("Semántico", `No existe la función 'Principal'.`, 0, 0);
-            arbol.errores.push(excepcion);
-        }
-        // llamo a principal desde el inicio, para evitar problemas de ejecución
-        c3d += `call principal;\n`;
+        /**
+         * Genero C3D para función principal
+         */
+        const principal = tabla.getFuncion("principal");
+        c3d += principal.funcion.generarC3D(tabla, arbol);
+        c3d += "goto L200;\n\n";
         /**
          * GENERO C3D
          */
-        arbol.instrucciones.map(m => {
-            c3d += m.generarC3D(tabla, arbol);
+        for (const m of arbol.instrucciones) {
+            if (m instanceof Funcion) {
+                continue;
+            }
+            if (!(m instanceof Declaracion)) {
+                c3d += m.generarC3D(tabla, arbol);
+            }
+        };
+        /**
+         * GENERO C3D DE FUNCIONES
+         */
+        tabla.funciones.map(t => {
+            if (t.funcion.nombre != "principal") {
+                c3d += t.funcion.generarC3D(tabla, arbol);
+            }
         });
 
         /**
-         * Finalizo el C3D (agregando lista de temporales en encabeado
-         * y colocando etiquetas necesarias para evitar que se parsee la sábana de C3D)
+         * Finalizo el C3D (agregando lista de temporales en encabezado
+         * y colocando salto al final del código para evitar parsear la sábana completa
          */
         let etiquetas = finalizarC3D(tabla, arbol);
         c3d = etiquetas + c3d;
@@ -144,9 +160,9 @@ if (arbol.errores.length === 0) {
             if (err) return console.log(err);
             console.log('c3d > C3D.j');
         });
+    } else {
+        // TODO - DEVOLVER LOS ERRORES AL FRONTEND
     }
-
-  //  console.log(JSON.stringify(tabla, null, 2));
 
     if (arbol.errores.length > 0 ) {
         arbol.errores.map(e => {
@@ -155,18 +171,19 @@ if (arbol.errores.length === 0) {
     }
 
 } else {
-    //TODO - retornar el array de errores;
+    //TODO - DEVOLVER ERRORES AL FRONTEND
     arbol.errores.map(e => {
         console.log(JSON.stringify(e));
     });
 
 }
 
-function inicializarC3D(tabla, arbol) {
+function inicializarC3D(tabla, arbol, globales) {
     let c3d = "var p=0;\n";
     c3d += "var h=0;\n";
     c3d += "var heap[];\n";
-    c3d += "var stack[];\n";
+    c3d += "var stack[];\n\n";
+    c3d += inicializarGlobales(tabla, arbol, globales);
     return c3d;
 }
 
@@ -177,4 +194,39 @@ function finalizarC3D(tabla, arbol) {
     }
     c3d += ";\n";
     return c3d;
+}
+
+function inicializarGlobales(tabla, arbol, globales) {
+    let c3d = "";
+    c3d += "#* Declaraciones Globales *#\n";
+    /**
+     * Reservo espacio para cada todas las declaraciones globales
+     */
+    globales.map(global => {
+        if (global.valor != null) {
+            let valor3D = global.valor.generarC3D(tabla, arbol);
+            c3d += valor3D;
+            c3d += `heap[h] = ${tabla.getTemporalActual()};\n`;
+            c3d += `h = h + 1;\n`;
+            tabla.quitarTemporal(tabla.getTemporalActual());
+        } else {
+            if (global.tipo.toString().toLowerCase() == "integer") {
+                c3d += `heap[h] = 0;\n`;
+                c3d += `h = h + 1;\n`;
+            } else
+            if (global.tipo.toString().toLowerCase() == "double") {
+                c3d += `heap[h] = 0.0;\n`;
+                c3d += `h = h + 1;\n`;
+            } else
+            if (global.tipo.toString().toLowerCase() == "boolean") {
+                c3d += `heap[h] = 0;\n`;
+                c3d += `h = h + 1;\n`;
+            } else
+            if (global.tipo.toString().toLowerCase() == "char") {
+                c3d += `heap[h] = ${'\0'.charCodeAt(0)};\n`;
+                c3d += `h = h + 1;\n`;
+            }
+        }
+    });
+    return c3d+"\n";
 }

@@ -18,5 +18,20 @@ class Identificador extends AST {
         this.tipo = result.tipo;
         return result.tipo;
     }
+
+    generarC3D(tabla, arbol) {
+        let codigo = "";
+        let variable = tabla.getVariable(this.id);
+        if (!tabla.ambito) {
+            codigo += `${tabla.getTemporal()} = heap[${variable.posicion}]\n`;
+        } else {
+            let temp = tabla.getTemporal();
+            codigo += `${temp} = P\n`;
+            codigo += `${temp} = ${temp} + ${variable.posicion}\n`;
+            codigo += `${tabla.getTemporal()} = stack[${temp}]\n`;
+        }
+        tabla.AgregarTemporal(tabla.getTemporalActual());
+        return codigo;
+    }
 }
 module.exports = Identificador;

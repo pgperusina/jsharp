@@ -1,5 +1,6 @@
 const AST = require('../AST');
 const Excepcion = require('../Excepciones/Excepcion');
+const Identificador = require('../expresiones/Identificador');
 const Tipo = require('../tabla/Tipo').Tipo;
 const Types = require('../tabla/Tipo').Types;
 
@@ -34,7 +35,26 @@ class ExpresionAsignacion extends AST {
     }
 
     generarC3D(tabla, arbol) {
-        return "ldkjflkasdj";
+        let codigo = "";
+        // let variable = tabla.getVariable(this.identificador);
+        if (this.izquierdo instanceof  Identificador) {
+            let variable = tabla.getVariable(this.izquierdo.id);
+            let valor3D = this.derecho.generarC3D(tabla, arbol);
+            codigo += valor3D;
+            if (!tabla.ambito) {
+                codigo += `heap[h] = ${tabla.getTemporalActual()};\n`;
+                codigo += `h = h + 1;\n`;
+                tabla.quitarTemporal(tabla.getTemporalActual());
+            } else {
+                let t1 = tabla.getTemporalActual();
+                let t2 = tabla.getTemporal();
+                codigo += `${t2} = p + ${variable.posicion};\n`;
+                codigo += `stack[${t2}] = ${t1};\n`;
+                tabla.quitarTemporal(t1);
+            }
+        }
+
+        return codigo;
     }
 
 

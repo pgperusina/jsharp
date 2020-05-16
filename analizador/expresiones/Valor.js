@@ -15,7 +15,13 @@ class Valor extends AST {
 
     generarC3D(tabla, arbol) {
         const temporal = tabla.getTemporal();  //t1
-        let c3d = `${temporal} = ${this.valor} \n`;  // t1 = 1
+        let valor;
+        if (this.tipo.toString().toLowerCase() == "char") {
+            valor = this.valor.toString().charCodeAt(0);
+        } else {
+            valor = this.valor;
+        }
+        let c3d = `${temporal} = ${valor};\n`;  // t1 = 1
         tabla.agregarTemporal(tabla.getTemporalActual());
         return c3d;
     }

@@ -7,7 +7,7 @@ class AST {
     }
 
     generarC3D(tabla, arbol) {
-        return null;
+        return "\n";
     }
 
     validar(tabla, arbol) {

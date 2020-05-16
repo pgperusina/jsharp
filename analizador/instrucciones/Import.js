@@ -7,8 +7,5 @@ class Import extends AST {
         super(null, fila, columna);
         this.archivos = archivos;
     }
-    generarC3D(tabla, arbol) {
-        return '\n';
-    }
 }
 module.exports = Import;

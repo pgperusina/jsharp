@@ -726,7 +726,7 @@ expresionPrimaria
 		$$ = new Cadena(new Tipo(Types.STRING, false, null), $1, new Arreglo(new Tipo(Types.STRING, true, null), new Valor(new Tipo(Types.INTEGER, false, null), $1.length, this._$.first_line, this._$.first_column), this._$.first_line, this._$.first_column), this._$.first_line, this._$.first_column);
 	}
 	| CARACTER {
-		$$ = new Valor(new Tipo(Types.CHAR, false, null), $1, this._$.first_line, this._$.first_column);
+		$$ = new Valor(new Tipo(Types.CHAR, false, null), '$1', this._$.first_line, this._$.first_column);
 	}
 	| ENTERO {
 		$$ = new Valor(new Tipo(Types.INTEGER, false, null), new Number($1), this._$.first_line, this._$.first_column);

@@ -73,15 +73,6 @@ class Declaracion extends AST {
     }
 
     generarC3D(tabla, arbol) {
-        ///////////////////////////////////////////////////////
-        // if (this.calificadorTipo === null) {  // declaracion tipo 1, 5, de estructuras y de arreglos de estructuras
-        //     for (let i = 0; i < this.id.length; i++) {
-        //         tabla.setVariable(new Simbolo(this.tipo,this.id[i], this.posicion[i], this.fila, this.columna));
-        //     }
-        // } else {  // declaracion tipo 2,3 y 4
-        //     tabla.setVariable(new Simbolo(this.tipo, this.id[0], this.posicion[0], this.fila, this.columna));
-        // }
-        ///////////////////////////////////////////////////////
         let codigo = '';
         let variable;
         /**
@@ -99,6 +90,7 @@ class Declaracion extends AST {
                         // codigo += `heap[${this.posicion[pos]}] = ${tabla.getTemporalActual()};\n`;
                         codigo += `heap[h] = ${tabla.getTemporalActual()};\n`;
                         codigo += `h = h + 1;\n`;
+                        tabla.quitarTemporal(tabla.getTemporalActual());
                     } else {
                         let t1 = tabla.getTemporalActual();  // por ejemplo, el temporal que generó el nodo Valor t1;
                         let t2 = tabla.getTemporal();  // t2;
@@ -106,8 +98,8 @@ class Declaracion extends AST {
                         // codigo += `${t2} = p;\n`;  // t2 = P
                         codigo += `${t2} = p + ${this.posicion[pos++]};\n`;// t2 = t2 + 0; calculo posicion de variable en stack
                         codigo += `stack[${t2}] = ${t1};\n`;   // stack[t2]  = t1;  guardo valor en stack
+                        tabla.quitarTemporal(t1);
                     }
-                    tabla.quitarTemporal(tabla.getTemporalActual());
                 } else {  // DECLARACION DE PRIMITIVOS, VERIFICAR SI ESTOY EN FUNCION O SI ESTOY EN GLOBAL
                     if (!tabla.ambito) {
                         if (this.tipo.toString().toLowerCase() == "integer") {
@@ -146,6 +138,17 @@ class Declaracion extends AST {
             });
         }
         codigo += `\n`;
+
+        ///////////////////////////////////////////////////////
+        if (this.calificadorTipo === null) {  // declaracion tipo 1, 5, de estructuras y de arreglos de estructuras
+            for (let i = 0; i < this.id.length; i++) {
+                tabla.setVariable(new Simbolo(this.tipo,this.id[i], this.posicion[i], this.fila, this.columna));
+            }
+        } else {  // declaracion tipo 2,3 y 4
+            tabla.setVariable(new Simbolo(this.tipo, this.id[0], this.posicion[0], this.fila, this.columna));
+        }
+        ///////////////////////////////////////////////////////
+
         return codigo;
     }
 }
